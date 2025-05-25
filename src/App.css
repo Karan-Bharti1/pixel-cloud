@@ -14,6 +14,8 @@ text-align: center;
   background-color: white;
   border-radius: 4px;
   padding:0.5rem;
+  text-decoration: none;
+  color:black;
 }
 .gallery-background {
   position: relative;
