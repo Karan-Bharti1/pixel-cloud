@@ -1,0 +1,15 @@
+:root {
+  --primary: #121212; 
+  --text-color: #E0E0E0;  
+  --secondary:#444444;     
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary);
+  color: var(--text-color);
+ 
+  font-family: sans-serif;
+}

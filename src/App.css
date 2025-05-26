@@ -1,3 +1,6 @@
+:root{
+  --secondary:#444444;   
+}
 .login-container {
   display: flex;
   justify-content: center;
@@ -5,6 +8,7 @@
  
 
 }
+
 .login-box {
   border-radius: 1rem;
 text-align: center;
@@ -30,4 +34,14 @@ text-align: center;
 }
 .gallery-background h1,p{
     text-shadow: 0 0 8px rgba(0,0,0,0.7);
+}
+.img{
+    height: 50px;
+    width: 50px;
+    border-radius: 70%;
+}
+.header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
