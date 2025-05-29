@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { IoIosLogOut } from "react-icons/io";
 import TooltipPositionedExample from './Tooltip';
-function Header({userInfo}) {
-     console.log(userInfo)
+function Header() {
+    const userInfo=JSON.parse(localStorage.getItem('user-info'))
+console.log(userInfo)
     const navigate=useNavigate()
       const handleLogOut=()=>{
 
@@ -16,7 +17,7 @@ function Header({userInfo}) {
           <div className='header '>
       <h2> Pixel Cloud</h2> 
       <div>
-<TooltipPositionedExample userInfo={userInfo}/>
+        {userInfo && <TooltipPositionedExample />}
 
 <button className=' mx-3' onClick={handleLogOut}><IoIosLogOut/></button>
       </div>

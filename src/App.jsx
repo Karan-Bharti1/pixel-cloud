@@ -6,12 +6,14 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 function App() {
-
+const navigate=useNavigate()
   const [userInfo,setUserInfo]=useState(null)
 
   useEffect(()=>{
     const data=localStorage.getItem('user-info')
-  
+  if(!data){
+    navigate("/login")
+  }
     const userData=JSON.parse(data)
     setUserInfo(userData)
   },[])
@@ -19,10 +21,10 @@ function App() {
   return (
     <>
        <div className='container mt-3'>
-    <Header userInfo={userInfo}/>
+    <Header />
   <main className='container'>
-<h1>Welcome {userInfo?.name}</h1>
-<p>User Email:{userInfo?.email}</p>
+<h1>My Albums</h1>
+
 
       </main>
 
