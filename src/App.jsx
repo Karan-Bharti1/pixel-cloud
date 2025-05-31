@@ -47,14 +47,40 @@ console.log(state)
   <>
   {/* <CarouselCard/> */}
   
-  <h2 className='text-center mt-4'> Welcome to Cloud Pixel</h2>
+ 
+<div className="container text-light my-5">
+  <h2 className="text-center mb-5">Why Create Albums?</h2>
+  <div className="row g-4">
+    <div className="col-md-4">
+      <div className="p-4 bg-dark rounded-4 shadow-lg h-100 border border-primary">
+        <h5 className="text-center">Stay Organized</h5>
+        <p className="text-center mt-3">Group your photos into albums to easily access and manage your memories.</p>
+      </div>
+    </div>
+
+    <div className="col-md-4">
+      <div className="p-4 bg-dark rounded-4 shadow-lg h-100 border border-success">
+        <h5 className="text-center">Cloud Secure</h5>
+        <p className="text-center mt-3">Your albums are backed up safely in the cloud — accessible anytime, anywhere.</p>
+      </div>
+    </div>
+
+    <div className="col-md-4">
+      <div className="p-4 bg-dark rounded-4 shadow-lg h-100 border border-warning">
+        <h5 className="text-center">Easy Sharing</h5>
+        <p className="text-center mt-3">Share your albums with one click — no more sending photos one by one.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   
   <h2 className='text-center mt-4'>Create new Album and organize your memories.</h2>
   <br/>
   <div className='text-center'>
      <button className="button-create-album ">+ Create Album</button>
   </div>
-   
   </>
 )}
 {state.status!="loading"&& state.albums.length>0 &&(<>
