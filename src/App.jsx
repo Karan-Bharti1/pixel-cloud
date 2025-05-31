@@ -7,10 +7,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAlbumsData } from './reduxSlice/albumSlice'
-import CarouselCard from '../components/Carousel'
+import { IoCloseSharp } from "react-icons/io5";
 function App() {
 const navigate=useNavigate()
-
+const [showForm,setShowForm]=useState(false)
   const [userInfo,setUserInfo]=useState(null)
 const dispatch=useDispatch()
 const state=useSelector(state=>state.albums)
@@ -26,7 +26,14 @@ const state=useSelector(state=>state.albums)
    
   },[dispatch,navigate])
 
-console.log(state)
+
+const handleFormClick=()=>{
+  setShowForm(true)
+}
+const handleSubmit=(event)=>{
+event.preventDefault()
+setShowForm(false)
+}
   return (
     <>
        <div className='container mt-3'>
@@ -45,7 +52,7 @@ console.log(state)
     </div>)}
 {state.status!="loading" && state.albums.length===0&&(
   <>
-  {/* <CarouselCard/> */}
+
   
  
 <div className="container text-light my-5">
@@ -79,14 +86,14 @@ console.log(state)
   <h2 className='text-center mt-4'>Create new Album and organize your memories.</h2>
   <br/>
   <div className='text-center'>
-     <button className="button-create-album ">+ Create Album</button>
+     <button onClick={handleFormClick} className="button-create-album ">+ Create Album</button>
   </div>
   </>
 )}
 {state.status!="loading"&& state.albums.length>0 &&(<>
 <div  className='head-container'>
   <h1 className='mt-3'>My Albums</h1>
-  <button className="button-create-album">+ Create New Album</button>
+  <button className="button-create-album" onClick={handleFormClick}>+ Create New Album</button>
 </div>
 <br/><br/>
 <div className='row'>
@@ -105,8 +112,6 @@ console.log(state)
   </div>
 </div>
 
-
-   
     </Link>
   </div>
 ))}
@@ -114,7 +119,20 @@ console.log(state)
 
 </div>
 </>)}
-
+{showForm && (<div className='album-form'>
+<form onSubmit={handleSubmit}  className='album-form-inner bg-light'>
+<div className='form-detail-handler'>
+  <h2 className=' text-secondary'>Your New Album</h2>
+  <button className='btn btn-danger'><IoCloseSharp/></button>
+  </div>
+  <label className='text-secondary'>Your Album's name :</label>
+<input type='text' className='form-control' placeholder='Album Name'/>
+<br/>
+ <label className='text-secondary'>Your Album's description: </label>
+<textarea className='form-control' placeholder='Album Description'></textarea>
+<button className='button-create-album my-3'>Submit Details</button>
+</form>
+</div>)}
 
 
       </main>
