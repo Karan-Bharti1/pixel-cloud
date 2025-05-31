@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAlbumsData } from './reduxSlice/albumSlice'
+import { fetchAlbumsData, postAlbumData } from './reduxSlice/albumSlice'
 import { IoCloseSharp } from "react-icons/io5";
 function App() {
 const navigate=useNavigate()
@@ -14,6 +14,15 @@ const [showForm,setShowForm]=useState(false)
   const [userInfo,setUserInfo]=useState(null)
 const dispatch=useDispatch()
 const state=useSelector(state=>state.albums)
+ const data=localStorage.getItem('user-info')
+ const id=JSON.parse(data).id
+const [newAlbumData,setNewAlbumData]=useState({
+  ownerId:id,
+  name:"",
+  description:""
+})
+
+
   useEffect(()=>{
     const data=localStorage.getItem('user-info')
     
@@ -25,13 +34,17 @@ const state=useSelector(state=>state.albums)
     dispatch(fetchAlbumsData(userData.id))
    
   },[dispatch,navigate])
-
-
+const handleFormChange=(event)=>{
+  const {value,name}=event.target
+  setNewAlbumData(prev=>({...prev,[name]:value}))
+}
+console.log(newAlbumData)
 const handleFormClick=()=>{
   setShowForm(true)
 }
 const handleSubmit=(event)=>{
 event.preventDefault()
+dispatch(postAlbumData(newAlbumData))
 setShowForm(false)
 }
   return (
@@ -53,7 +66,6 @@ setShowForm(false)
 {state.status!="loading" && state.albums.length===0&&(
   <>
 
-  
  
 <div className="container text-light my-5">
   <h2 className="text-center mb-5">Why Create Albums?</h2>
@@ -93,7 +105,7 @@ setShowForm(false)
 {state.status!="loading"&& state.albums.length>0 &&(<>
 <div  className='head-container'>
   <h1 className='mt-3'>My Albums</h1>
-  <button className="button-create-album" onClick={handleFormClick}>+ Create New Album</button>
+  <button className="button-create-album" onClick={()=>setShowForm(true)}>+ Create New Album</button>
 </div>
 <br/><br/>
 <div className='row'>
@@ -123,14 +135,14 @@ setShowForm(false)
 <form onSubmit={handleSubmit}  className='album-form-inner bg-light'>
 <div className='form-detail-handler'>
   <h2 className=' text-secondary'>Your New Album</h2>
-  <button className='btn btn-danger'><IoCloseSharp/></button>
+  <button className='btn btn-danger' onClick={()=>setShowForm(false)}><IoCloseSharp/></button>
   </div>
   <label className='text-secondary'>Your Album's name :</label>
-<input type='text' className='form-control' placeholder='Album Name'/>
+<input type='text' name="name" value={newAlbumData.name} className='form-control' onChange={handleFormChange} placeholder='Album Name'/>
 <br/>
  <label className='text-secondary'>Your Album's description: </label>
-<textarea className='form-control' placeholder='Album Description'></textarea>
-<button className='button-create-album my-3'>Submit Details</button>
+<textarea className='form-control' name="description" value={newAlbumData.description} onChange={handleFormChange} placeholder='Album Description'></textarea>
+<button className='button-create-album my-3' type='submit'>Submit Details</button>
 </form>
 </div>)}
 

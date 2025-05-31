@@ -3,7 +3,7 @@ import { carouselImageOneUrl, carouselImageThreeUrl, carouselImageTwoUrl } from 
 
 function CarouselCard() {
   return (
-    <Carousel>
+    <Carousel interval={2000}>
       <Carousel.Item>
         <img
           className="d-block w-100 carousel-img-small"

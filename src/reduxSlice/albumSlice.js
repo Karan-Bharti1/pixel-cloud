@@ -7,6 +7,15 @@ export const fetchAlbumsData=createAsyncThunk("fetchAlbums",async(id)=>{
  
     return response.data
 })
+export const postAlbumData=createAsyncThunk( "postAlbums",async(data)=>{
+    const response=await axios.post(`${baseURL}/album`,data,{
+        headers:{
+            'Content-Type':'application/json'
+        }
+        
+    })
+    return response.data
+})
  export const albumSlice=createSlice({
 name:"albums",
 initialState:{
@@ -24,6 +33,17 @@ extraReducers:(builder)=>{
         state.albums=action.payload
     })
     builder.addCase(fetchAlbumsData.rejected,(state,action)=>{
+        state.status="error"
+        state.error=action.payload.message
+    })
+    builder.addCase(postAlbumData.pending,state=>{
+        state.status="loading"
+    })
+    builder.addCase(postAlbumData.fulfilled,(state,action)=>{
+        state.status="succeeded"
+        state.albums.push(action.payload)
+    })
+    builder.addCase(postAlbumData.rejected,(state,action)=>{
         state.status="error"
         state.error=action.payload.message
     })
