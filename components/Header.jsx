@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { Link } from 'react-router-dom';
 import { IoIosLogOut } from "react-icons/io";
 import TooltipPositionedExample from './Tooltip';
 function Header() {
@@ -15,7 +15,7 @@ function Header() {
   return (
     <header>
           <div className='header '>
-      <h2> Pixel Cloud</h2> 
+      <h2><Link to="/home" className="text-decoration-none"> Pixel Cloud</Link></h2> 
       <div>
         {userInfo && <TooltipPositionedExample />}
 

@@ -54,7 +54,7 @@ height:200px;
 .head-container{
   display: flex;
   justify-content: space-between;
-
+align-items: center;
 }
 .card-ablum{
   background-color: var(--secondary);
@@ -80,4 +80,9 @@ height:200px;
 .carousel-img-small {
   height: 400px;
   object-fit: cover;
+}
+.number{
+  padding: 0.5rem 1rem;
+  margin: 4px auto;
+  border-radius: 50%;
 }

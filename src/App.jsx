@@ -10,7 +10,7 @@ import { fetchAlbumsData } from './reduxSlice/albumSlice'
 import CarouselCard from '../components/Carousel'
 function App() {
 const navigate=useNavigate()
-// const [albumData,setAlbumData]=useState([])
+
   const [userInfo,setUserInfo]=useState(null)
 const dispatch=useDispatch()
 const state=useSelector(state=>state.albums)
