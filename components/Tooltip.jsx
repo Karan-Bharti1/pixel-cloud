@@ -4,7 +4,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 
 function TooltipPositionedExample() {
    const userInfo=JSON.parse(localStorage.getItem('user-info'))
-console.log(userInfo)
+
     const getProxiedImageUrl = (originalUrl) => {
     if (!originalUrl) return null;
 

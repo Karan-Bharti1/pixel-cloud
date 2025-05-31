@@ -6,7 +6,7 @@ import {createBrowserRouter, Navigate, RouterProvider} from "react-router-dom"
 import Login from './pages/Login.jsx'
 import NotFound from './pages/NotFound.jsx'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import {Provider} from "@reduxjs/toolkit"
+import { Provider } from 'react-redux'
 import store from './store.js'
 const GoogleOAuthWrapper=()=>(
   <GoogleOAuthProvider clientId='919329357228-pljkg169718fikr5cq0vib012q4jv44e.apps.googleusercontent.com'>

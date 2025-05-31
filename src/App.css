@@ -1,12 +1,13 @@
 :root{
   --secondary:#444444;   
+  --button-primary:#6a11cb;;
+  --button-secondary:#2575fc
 }
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
  
-
 }
 
 .login-box {
@@ -44,4 +45,39 @@ text-align: center;
     display: flex;
     width: 100%;
     justify-content: space-between;
+}
+
+.card-height{
+height:200px;
+
+}
+.head-container{
+  display: flex;
+  justify-content: space-between;
+
+}
+.card-ablum{
+  background-color: var(--secondary);
+    color:white;
+}
+.button-create-album {
+  
+  background: linear-gradient(135deg, var(--button-primary) 0%, var(--button-secondary) 100%);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 6px 12px rgba(37, 117, 252, 0.5);
+  transition: all 0.3s ease;
+}
+
+.button-create-album:hover {
+  background: linear-gradient(135deg, var(--button-secondary) 0%, var(--button-primary) 100%);
+}
+.carousel-img-small {
+  height: 400px;
+  object-fit: cover;
 }

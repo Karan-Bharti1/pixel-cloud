@@ -5,7 +5,7 @@ import { IoIosLogOut } from "react-icons/io";
 import TooltipPositionedExample from './Tooltip';
 function Header() {
     const userInfo=JSON.parse(localStorage.getItem('user-info'))
-console.log(userInfo)
+
     const navigate=useNavigate()
       const handleLogOut=()=>{
 

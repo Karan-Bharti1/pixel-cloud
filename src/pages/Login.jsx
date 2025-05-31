@@ -13,8 +13,8 @@ try {
 const response= await googleAuth(authResult['code'])
 const token=response.data.token
 
-const {email,name,image}=response.data.user
-const obj={email,name,image,token}
+const {email,name,image,_id}=response.data.user
+const obj={email,name,image,token,id:_id}
 
 localStorage.setItem("user-info",JSON.stringify(obj))
 navigate("/dashboard")
