@@ -81,6 +81,7 @@ align-items: center;
   height: 400px;
   object-fit: cover;
 }
+
 .number{
   padding: 0.5rem 1rem;
   margin: 4px auto;

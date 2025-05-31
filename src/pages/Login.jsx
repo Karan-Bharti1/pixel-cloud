@@ -17,7 +17,7 @@ const {email,name,image,_id}=response.data.user
 const obj={email,name,image,token,id:_id}
 
 localStorage.setItem("user-info",JSON.stringify(obj))
-navigate("/dashboard")
+navigate("/home")
   }
   
 } catch (error) {

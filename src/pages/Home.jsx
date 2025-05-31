@@ -1,14 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../../components/Header'
 import CarouselCard from '../../components/Carousel'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Footer from '../../components/Footer'
 
 function Home() {
+    const navigate=useNavigate()
+      useEffect(()=>{
+        const data=localStorage.getItem('user-info')
+        
+      if(!data){
+        navigate("/login")
+      }
+        
+        
+       
+      },[navigate])
   return (
     <div className='container mt-3'>
     <Header/>
     <main >
+         
         <CarouselCard/>
+         <h1 className='text-center my-4'> Welcome to Cloud Pixel</h1>
 <h2 className='text-center mt-4'>To get started, click here.</h2>
 <div className='text-center my-3'>
 <Link className='button-create-album text-decoration-none' to="/dashboard">Move to Dashboard</Link>
@@ -63,6 +77,7 @@ function Home() {
 </div>
 
     </main>
+    <Footer/>
     </div>
   )
 }

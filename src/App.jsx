@@ -45,11 +45,14 @@ console.log(state)
     </div>)}
 {state.status!="loading" && state.albums.length===0&&(
   <>
-  <CarouselCard/>
+  {/* <CarouselCard/> */}
+  
+  <h2 className='text-center mt-4'> Welcome to Cloud Pixel</h2>
+  
   <h2 className='text-center mt-4'>Create new Album and organize your memories.</h2>
   <br/>
   <div className='text-center'>
-     <button className="button-create-album ">+ New Album</button>
+     <button className="button-create-album ">+ Create Album</button>
   </div>
    
   </>
