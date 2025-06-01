@@ -111,7 +111,7 @@ setShowForm(false)
 <div className='row'>
   {state.albums.map((album) => (
   <div key={album._id} className="col-md-3 col-sm-6 mb-4">
-    <Link className='text-decoration-none'>
+    <Link className='text-decoration-none' to={`/album/${album._id}`}>
  
 <div
   className="card-ablum d-flex flex-column justify-content-between shadow-lg rounded-4 p-4 text-white" style={{height:"200px"}}
