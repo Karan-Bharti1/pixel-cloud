@@ -110,3 +110,6 @@ align-items: center;
   justify-content: space-between;
   align-items: center;
 }
+.view-album-head{
+  text-align: right;
+}
