@@ -8,6 +8,7 @@ import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAlbumsData, postAlbumData } from './reduxSlice/albumSlice'
 import { IoCloseSharp } from "react-icons/io5";
+import AlbumForm from '../components/AlbumForm'
 function App() {
 const navigate=useNavigate()
 const [showForm,setShowForm]=useState(false)
@@ -16,6 +17,7 @@ const dispatch=useDispatch()
 const state=useSelector(state=>state.albums)
  const data=localStorage.getItem('user-info')
  const id=JSON.parse(data).id
+ const token=JSON.parse(data).token
 const [newAlbumData,setNewAlbumData]=useState({
   ownerId:id,
   name:"",
@@ -31,7 +33,7 @@ const [newAlbumData,setNewAlbumData]=useState({
   }
     const userData=JSON.parse(data)
     setUserInfo(userData)
-    dispatch(fetchAlbumsData(userData.id))
+    dispatch(fetchAlbumsData({id:userData.id,token:userData.token}))
    
   },[dispatch,navigate])
 const handleFormChange=(event)=>{
@@ -44,7 +46,7 @@ const handleFormClick=()=>{
 }
 const handleSubmit=(event)=>{
 event.preventDefault()
-dispatch(postAlbumData(newAlbumData))
+dispatch(postAlbumData({data:newAlbumData,token:token}))
 setShowForm(false)
 }
   return (
@@ -132,18 +134,7 @@ setShowForm(false)
 </div>
 </>)}
 {showForm && (<div className='album-form'>
-<form onSubmit={handleSubmit}  className='album-form-inner bg-light'>
-<div className='form-detail-handler'>
-  <h2 className=' text-secondary'>Your New Album</h2>
-  <button className='btn btn-danger' onClick={()=>setShowForm(false)}><IoCloseSharp/></button>
-  </div>
-  <label className='text-secondary'>Your Album's name :</label>
-<input type='text' name="name" value={newAlbumData.name} className='form-control' onChange={handleFormChange} placeholder='Album Name'/>
-<br/>
- <label className='text-secondary'>Your Album's description: </label>
-<textarea className='form-control' name="description" value={newAlbumData.description} onChange={handleFormChange} placeholder='Album Description'></textarea>
-<button className='button-create-album my-3' type='submit'>Submit Details</button>
-</form>
+<AlbumForm handleFormChange={handleFormChange} setShowForm={setShowForm} handleSubmit={handleSubmit} newAlbumData={newAlbumData}/>
 </div>)}
 
 

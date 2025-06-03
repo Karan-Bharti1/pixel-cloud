@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import useFetch from '../utils/useFetch'
 import { baseURL } from '../url'
 import { Link } from 'react-router-dom'
+import { MdEdit } from "react-icons/md";
 function ViewAlbum() {
     const {albumId}=useParams()
     console.log(albumId)
@@ -17,9 +18,9 @@ function ViewAlbum() {
         <Link to="/dashboard" className="button-create-album text-decoration-none"> Back to Dashboard</Link>
       </div>
 {!loading && <>
-<h1 className='text-center mt-4'>{data.name}</h1>
+<h1 className='text-center mt-4'>{data.name} <button className='bg-dark text-light'><MdEdit/></button></h1>
 {data.description.length>0 && <>
-<h4 className='text-center mt-3'>{data .description}</h4></>}
+<h4 className='text-center mt-3'>{data .description} </h4></>}
 </>}
     </main>
 </div>

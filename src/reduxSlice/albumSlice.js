@@ -1,16 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseURL } from "../url";
-export const fetchAlbumsData=createAsyncThunk("fetchAlbums",async(id)=>{
+export const getHeaders = (token) => {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
     
-    const response=await axios.get(`${baseURL}/album/${id}`)
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
+export const fetchAlbumsData=createAsyncThunk("fetchAlbums",async({id,token})=>{
+    
+    const response=await axios.get(`${baseURL}/album/${id}`,{
+        headers:getHeaders(token)
+    })
  
     return response.data
 })
-export const postAlbumData=createAsyncThunk( "postAlbums",async(data)=>{
+export const postAlbumData=createAsyncThunk( "postAlbums",async({data,token})=>{
     const response=await axios.post(`${baseURL}/album`,data,{
         headers:{
-            'Content-Type':'application/json'
+             headers:getHeaders(token)
         }
         
     })
