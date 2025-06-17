@@ -122,7 +122,6 @@ setShowForm(false)
 
   <div className="mt-auto">
     <h5 className="fw-semibold mb-1 ">{album.name}</h5>
-  
   </div>
 </div>
 

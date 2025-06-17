@@ -113,3 +113,19 @@ align-items: center;
 .view-album-head{
   text-align: right;
 }
+.img-btn-placeholder{
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+}
+.add-img-btn{
+ background-color: var(--transparent-color);
+  border: none;
+  color: white;
+  font-size: xx-large;
+  padding: 0.5rem;
+}
+.add-img-btn:hover{
+background-color: var(--secondary);
+padding: 0.5rem;
+}

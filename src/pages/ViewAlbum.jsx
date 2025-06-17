@@ -1,30 +1,176 @@
-import React from 'react'
-import Header from '../../components/Header'
-import { useParams } from 'react-router-dom'
-import useFetch from '../utils/useFetch'
-import { baseURL } from '../url'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import Header from '../../components/Header';
+import { useParams, Link } from 'react-router-dom';
+import useFetch from '../utils/useFetch';
+import { baseURL } from '../url';
 import { MdEdit } from "react-icons/md";
-function ViewAlbum() {
-    const {albumId}=useParams()
-    console.log(albumId)
+import { FaShareNodes } from "react-icons/fa6";
+import { BiSolidImageAdd } from "react-icons/bi";
+import { IoCloseSharp } from "react-icons/io5";
+import Select from 'react-select';
 
-    const {data,loading,error}=useFetch(`${baseURL}/albums/album/${albumId}`)
-    console.log(data)
-  return (<div className='container mt-3'>
-    <Header/>
-    <main className='container mt-3'>
-      <div className='view-album-head'>
-        <Link to="/dashboard" className="button-create-album text-decoration-none"> Back to Dashboard</Link>
-      </div>
-{!loading && <>
-<h1 className='text-center mt-4'>{data.name} <button className='bg-dark text-light'><MdEdit/></button></h1>
-{data.description.length>0 && <>
-<h4 className='text-center mt-3'>{data .description} </h4></>}
-</>}
-    </main>
-</div>
-  )
+function ViewAlbum() {
+  const { albumId } = useParams();
+  const [fileData, setFileData] = useState(null);
+  const [name, setName] = useState('');
+  const [tags, setTags] = useState([]);
+  const [imgForm, setImageForm] = useState(false);
+
+  const { data, loading } = useFetch(`${baseURL}/albums/album/${albumId}`);
+
+  const tagOptions = [
+    { value: 'nature', label: 'Nature' },
+    { value: 'sunset', label: 'Sunset' },
+    { value: 'city', label: 'City' },
+    { value: 'portrait', label: 'Portrait' },
+    { value: 'mountain', label: 'Mountain' },
+    { value: 'beach', label: 'Beach' },
+  ];
+
+  const handleTagChange = (selected) => {
+    setTags(selected || []);
+  };
+
+  const handleFileUpdate = (event) => {
+    const file = event.target.files[0];
+    const maxSize = 5 * 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
+    if (file) {
+      if (!allowedTypes.includes(file.type)) {
+        alert('Only JPG, JPEG, PNG, or GIF images are allowed.');
+        event.target.value = '';
+        setFileData(null);
+        return;
+      }
+
+      if (file.size > maxSize) {
+        alert('File size must be less than 5MB.');
+        event.target.value = '';
+        setFileData(null);
+        return;
+      }
+
+      setFileData(file);
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!fileData) {
+      alert('Please upload a valid image.');
+      return;
+    }
+
+
+   const file = fileData;
+    const maxSize = 5 * 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (file) {
+      if (!allowedTypes.includes(file.type)) {
+        alert('Only JPG, JPEG, PNG, or GIF images are allowed.');
+        event.target.value = '';
+        setFileData(null);
+        return;
+      }
+
+      if (file.size > maxSize) {
+        alert('File size must be less than 5MB.');
+        event.target.value = '';
+        setFileData(null);
+        return;
+      }
+
+      setFileData(file)}
+      const formData = new FormData();
+    formData.append('image', fileData);
+    formData.append('name', name);
+    formData.append('tags', JSON.stringify(tags.map(tag => tag.value)));
+    formData.append('albumID',albumId)
+
+    console.log('Submitting image', formData);
+  };
+
+  return (
+    <div className='container mt-3'>
+      <Header />
+      <main className='container mt-3'>
+        <div className='view-album-head'>
+          <Link to="/dashboard" className="button-create-album text-decoration-none">Back to Dashboard</Link>
+        </div>
+
+        {!loading && (
+          <>
+            <div className='img-btn-placeholder mt-3'>
+              <h1 className='mt-4'>
+                {data.name} <button className='add-img-btn'><MdEdit /></button>
+              </h1>
+              <div>
+                <button className='add-img-btn'><FaShareNodes /></button>
+                <button onClick={() => setImageForm(!imgForm)} className='add-img-btn'><BiSolidImageAdd /></button>
+              </div>
+            </div>
+
+            {data.description?.length > 0 && (
+              <h4 className='text-center mt-3'>{data.description}</h4>
+            )}
+
+            {imgForm && (
+              <div className='album-form'>
+                <form className='album-form-inner bg-light' onSubmit={handleSubmit}>
+                  <div className='form-detail-handler'>
+                    <h2 className='text-secondary'>Upload Image</h2>
+                    <button type="button" className='btn btn-danger' onClick={() => setImageForm(false)}>
+                      <IoCloseSharp />
+                    </button>
+                  </div>
+
+                  <input
+                    type='file'
+                    className='form-control mt-2'
+                    accept='.jpg,.jpeg,.png,.gif'
+                    onChange={handleFileUpdate}
+                    required
+                  />
+                  <br />
+                  <label className='text-secondary'>Image Name :</label>
+                  <input
+                    type="text"
+                    className='form-control'
+                    placeholder='Pixel Name'
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+
+                  <label className='text-secondary mt-3'>Select Tags :</label>
+                  <Select
+                    isMulti
+                    options={tagOptions}
+                    value={tags}
+                    onChange={handleTagChange}
+                    placeholder="Choose tags..."
+                      styles={{
+    option: (provided) => ({
+      ...provided,
+      color: 'black',   
+      backgroundColor: 'white', 
+    })}}
+                  />
+                  <br/>
+  <p className='text-muted small mb-1'>
+    <strong>Note:</strong> Only <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, and <code>.gif</code> images are allowed. Max file size: <strong>5MB</strong>.
+  </p>
+                  <br />
+                  <button type='submit' className='btn btn-danger'>Submit</button>
+                </form>
+              </div>
+            )}
+          </>
+        )}
+      </main>
+    </div>
+  );
 }
 
-export default ViewAlbum
+export default ViewAlbum;
