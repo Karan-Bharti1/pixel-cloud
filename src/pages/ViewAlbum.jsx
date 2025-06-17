@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Header from '../../components/Header';
 import { useParams, Link } from 'react-router-dom';
 import useFetch from '../utils/useFetch';
@@ -8,14 +8,21 @@ import { FaShareNodes } from "react-icons/fa6";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoCloseSharp } from "react-icons/io5";
 import Select from 'react-select';
+import { useDispatch, useSelector } from 'react-redux';
+import { uploadImage } from '../reduxSlice/imageSlice';
 
 function ViewAlbum() {
   const { albumId } = useParams();
+  const dispatch = useDispatch();
+
+  const fileInputRef = useRef(null);
   const [fileData, setFileData] = useState(null);
   const [name, setName] = useState('');
   const [tags, setTags] = useState([]);
   const [imgForm, setImageForm] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
+  const { status, error } = useSelector((state) => state.images);
   const { data, loading } = useFetch(`${baseURL}/albums/album/${albumId}`);
 
   const tagOptions = [
@@ -27,9 +34,7 @@ function ViewAlbum() {
     { value: 'beach', label: 'Beach' },
   ];
 
-  const handleTagChange = (selected) => {
-    setTags(selected || []);
-  };
+  const handleTagChange = (selected) => setTags(selected || []);
 
   const handleFileUpdate = (event) => {
     const file = event.target.files[0];
@@ -39,57 +44,44 @@ function ViewAlbum() {
     if (file) {
       if (!allowedTypes.includes(file.type)) {
         alert('Only JPG, JPEG, PNG, or GIF images are allowed.');
-        event.target.value = '';
+        fileInputRef.current.value = '';
         setFileData(null);
         return;
       }
-
       if (file.size > maxSize) {
         alert('File size must be less than 5MB.');
-        event.target.value = '';
+        fileInputRef.current.value = '';
         setFileData(null);
         return;
       }
-
       setFileData(file);
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (!fileData) {
       alert('Please upload a valid image.');
       return;
     }
 
-
-   const file = fileData;
-    const maxSize = 5 * 1024 * 1024;
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-    if (file) {
-      if (!allowedTypes.includes(file.type)) {
-        alert('Only JPG, JPEG, PNG, or GIF images are allowed.');
-        event.target.value = '';
-        setFileData(null);
-        return;
-      }
-
-      if (file.size > maxSize) {
-        alert('File size must be less than 5MB.');
-        event.target.value = '';
-        setFileData(null);
-        return;
-      }
-
-      setFileData(file)}
-      const formData = new FormData();
+    const formData = new FormData();
     formData.append('image', fileData);
     formData.append('name', name);
     formData.append('tags', JSON.stringify(tags.map(tag => tag.value)));
-    formData.append('albumID',albumId)
+    formData.append('albumId', albumId);
 
-    console.log('Submitting image', formData);
+    dispatch(uploadImage(formData));
+    setTags([]);
+    setName('');
+    setFileData(null);
+    setSuccessMessage("Image Upload Successfully");
+    fileInputRef.current.value = ''; // reset file input
+
+    setTimeout(() => {
+      setSuccessMessage('');
+      setImageForm(false);
+    }, 2000);
   };
 
   return (
@@ -97,7 +89,9 @@ function ViewAlbum() {
       <Header />
       <main className='container mt-3'>
         <div className='view-album-head'>
-          <Link to="/dashboard" className="button-create-album text-decoration-none">Back to Dashboard</Link>
+          <Link to="/dashboard" className="button-create-album text-decoration-none">
+            Back to Dashboard
+          </Link>
         </div>
 
         {!loading && (
@@ -131,6 +125,7 @@ function ViewAlbum() {
                     className='form-control mt-2'
                     accept='.jpg,.jpeg,.png,.gif'
                     onChange={handleFileUpdate}
+                    ref={fileInputRef}
                     required
                   />
                   <br />
@@ -139,6 +134,7 @@ function ViewAlbum() {
                     type="text"
                     className='form-control'
                     placeholder='Pixel Name'
+                    value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
@@ -150,19 +146,28 @@ function ViewAlbum() {
                     value={tags}
                     onChange={handleTagChange}
                     placeholder="Choose tags..."
-                      styles={{
-    option: (provided) => ({
-      ...provided,
-      color: 'black',   
-      backgroundColor: 'white', 
-    })}}
+                    styles={{
+                      option: (provided) => ({
+                        ...provided,
+                        color: 'black',
+                        backgroundColor: 'white',
+                      }),
+                      singleValue: (provided) => ({
+                        ...provided,
+                        color: 'black'
+                      }),
+                    }}
                   />
-                  <br/>
-  <p className='text-muted small mb-1'>
-    <strong>Note:</strong> Only <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, and <code>.gif</code> images are allowed. Max file size: <strong>5MB</strong>.
-  </p>
                   <br />
-                  <button type='submit' className='btn btn-danger'>Submit</button>
+                  <p className='text-muted small mb-1'>
+                    <strong>Note:</strong> Only <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, and <code>.gif</code> images are allowed. Max file size: <strong>5MB</strong>.
+                  </p>
+
+                  {status === 'loading' && <p className="text-info">Uploading...</p>}
+                  {status === 'succeeded' && <p className="text-success">{successMessage}</p>}
+                  {status === 'failed' && <p className="text-danger">Error: {error}</p>}
+
+                  <button type='submit' className='btn btn-danger mt-2'>Submit</button>
                 </form>
               </div>
             )}
