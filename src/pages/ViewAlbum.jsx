@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Header from '../../components/Header';
 import { useParams, Link } from 'react-router-dom';
 import useFetch from '../utils/useFetch';
@@ -9,7 +9,7 @@ import { BiSolidImageAdd } from "react-icons/bi";
 import { IoCloseSharp } from "react-icons/io5";
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadImage } from '../reduxSlice/imageSlice';
+import { getImagesAlbum, uploadImage } from '../reduxSlice/imageSlice';
 
 function ViewAlbum() {
   const { albumId } = useParams();
@@ -22,9 +22,11 @@ function ViewAlbum() {
   const [imgForm, setImageForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  const { status, error } = useSelector((state) => state.images);
+  const { status,images,   error } = useSelector((state) => state.images);
   const { data, loading } = useFetch(`${baseURL}/albums/album/${albumId}`);
-
+useEffect(()=>{
+dispatch(getImagesAlbum(albumId))
+},[albumId,dispatch])
   const tagOptions = [
     { value: 'nature', label: 'Nature' },
     { value: 'sunset', label: 'Sunset' },
@@ -83,7 +85,7 @@ function ViewAlbum() {
       setImageForm(false);
     }, 2000);
   };
-
+console.log(images)
   return (
     <div className='container mt-3'>
       <Header />
@@ -109,6 +111,20 @@ function ViewAlbum() {
             {data.description?.length > 0 && (
               <h4 className='text-center mt-3'>{data.description}</h4>
             )}
+        <div className="container mt-4">
+  <div className="row">
+    {images && images.map(i => (
+      <div key={i._id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <img
+          src={i.imageUrl}
+          alt=""
+          className="img-fluid rounded shadow-sm"
+          style={{ height: '200px', width: '100%', objectFit: 'cover' }}
+        />
+      </div>
+    ))}
+  </div>
+</div>
 
             {imgForm && (
               <div className='album-form'>
