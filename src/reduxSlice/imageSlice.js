@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { baseURL } from "../url";
 
+
 // Upload image thunk
 export const uploadImage = createAsyncThunk(
   "images/uploadImage",
@@ -23,17 +24,24 @@ export const uploadImage = createAsyncThunk(
 // Get images by album
 export const getImagesAlbum = createAsyncThunk(
   "images/getImagesAlbum",
-  async (albumId, { rejectWithValue }) => {
+  async (albumId) => {
     try {
       const response = await axios.get(`${baseURL}/images/${albumId}`);
       return response.data;
     } catch (err) {
       console.error(err);
-      return rejectWithValue(err.response?.data?.message || "Failed to fetch images");
+     
     }
   }
 );
-
+export const deleteImagesByAlbumId=createAsyncThunk("images/deleteImagesAlbum",async(albumId)=>{
+  try {
+    const response=await axios.delete(`${baseURL}/images/${albumId}`)
+    return response.data
+  } catch (error) {
+    console.error(error);
+  }
+})
 // Slice
 export const imageSlice = createSlice({
   name: "images",
@@ -43,37 +51,51 @@ export const imageSlice = createSlice({
     error: null,
   },
   reducers: {},
-  extraReducers: (builder) => {
-    builder
+extraReducers: (builder) => {
+  builder
+    // Upload image
+    .addCase(uploadImage.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    })
+    .addCase(uploadImage.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.images.push(action.payload); // Append the uploaded image
+    })
+    .addCase(uploadImage.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload;
+    })
 
-      // Upload image
-      .addCase(uploadImage.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(uploadImage.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.images.push(action.payload); // Append uploaded image
-      })
-      .addCase(uploadImage.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
+    // Get images of album
+    .addCase(getImagesAlbum.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    })
+    .addCase(getImagesAlbum.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.images = action.payload; // Replace with fetched images
+    })
+    .addCase(getImagesAlbum.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload || "Failed to fetch images";
+    })
 
-      // Get images of album
-      .addCase(getImagesAlbum.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(getImagesAlbum.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.images = action.payload; // Replace with fetched images
-      })
-      .addCase(getImagesAlbum.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      });
-  },
-});
+    // Delete images by albumId
+    .addCase(deleteImagesByAlbumId.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    })
+    .addCase(deleteImagesByAlbumId.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      // Assuming delete returns a success message, not updated images
+      state.images = state.images.filter(image => image.albumId !== action.meta.arg);
+    })
+    .addCase(deleteImagesByAlbumId.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.payload || "Failed to delete images";
+    });
+}
+})
 
 export default imageSlice.reducer;

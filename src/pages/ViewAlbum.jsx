@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Header from '../../components/Header';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import useFetch from '../utils/useFetch';
 import { baseURL } from '../url';
 import { MdEdit } from "react-icons/md";
@@ -9,8 +9,9 @@ import { BiSolidImageAdd } from "react-icons/bi";
 import { IoCloseSharp } from "react-icons/io5";
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
-import { getImagesAlbum, uploadImage } from '../reduxSlice/imageSlice';
-
+import { deleteImagesByAlbumId, getImagesAlbum, uploadImage } from '../reduxSlice/imageSlice';
+import { MdDeleteOutline } from "react-icons/md";
+import { deleteAlbumData } from '../reduxSlice/albumSlice';
 function ViewAlbum() {
   const { albumId } = useParams();
   const dispatch = useDispatch();
@@ -21,7 +22,8 @@ function ViewAlbum() {
   const [tags, setTags] = useState([]);
   const [imgForm, setImageForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-
+const [deleteAlbumModal,setDeleteAlbumModal]=useState(false)
+const navigate=useNavigate()
   const { status,images,   error } = useSelector((state) => state.images);
   const { data, loading } = useFetch(`${baseURL}/albums/album/${albumId}`);
 useEffect(()=>{
@@ -86,6 +88,12 @@ dispatch(getImagesAlbum(albumId))
     }, 2000);
   };
 console.log(images)
+
+const handleAlbumDelete=()=>{
+  dispatch(deleteImagesByAlbumId(albumId))
+  dispatch(deleteAlbumData(albumId))
+  navigate("/dashboard")
+}
   return (
     <div className='container mt-3'>
       <Header />
@@ -105,6 +113,7 @@ console.log(images)
               <div>
                 <button className='add-img-btn'><FaShareNodes /></button>
                 <button onClick={() => setImageForm(!imgForm)} className='add-img-btn'><BiSolidImageAdd /></button>
+                <button className='add-img-btn' onClick={()=>setDeleteAlbumModal(true)}><MdDeleteOutline/></button>
               </div>
             </div>
 
@@ -125,13 +134,33 @@ console.log(images)
     ))}
   </div>
 </div>
+{deleteAlbumModal && (
+  <div className="modal d-block album-form" tabIndex="-1" role="dialog" >
+    <div className="modal-dialog modal-dialog-centered album-form-inner" role="document">
+      <div className="modal-content shadow-lg rounded">
+     
+        <div className="modal-body bg-light">
+          <p className="text-dark fs-5 mb-2 no-shadow">Are you sure you want to permanently delete this album?</p>
+          <p className="text-muted small mb-0 no-shadow">
+            <strong>Note:</strong> All images in this album will also be deleted.
+          </p>
+        </div>
+        <div className="modal-footer bg-light">
+          <button className="btn btn-danger" onClick={handleAlbumDelete} >Yes, Delete</button>
+          <button className="btn btn-secondary" onClick={() => setDeleteAlbumModal(false)}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
             {imgForm && (
               <div className='album-form'>
                 <form className='album-form-inner bg-light' onSubmit={handleSubmit}>
                   <div className='form-detail-handler'>
                     <h2 className='text-secondary'>Upload Image</h2>
-                    <button type="button" className='btn btn-danger' onClick={() => setImageForm(false)}>
+                    <button type="button" className='btn' onClick={() => setImageForm(false)}>
                       <IoCloseSharp />
                     </button>
                   </div>
@@ -175,15 +204,15 @@ console.log(images)
                     }}
                   />
                   <br />
-                  <p className='text-muted small mb-1'>
+                  <p className='text-secondary no-shadow'>
                     <strong>Note:</strong> Only <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, and <code>.gif</code> images are allowed. Max file size: <strong>5MB</strong>.
                   </p>
 
-                  {status === 'loading' && <p className="text-info">Uploading...</p>}
-                  {status === 'succeeded' && <p className="text-success">{successMessage}</p>}
-                  {status === 'failed' && <p className="text-danger">Error: {error}</p>}
+                  {status === 'loading' && <p className=" no-shadow text-info">Uploading...</p>}
+                  {status === 'succeeded' && <p className="no-shadow text-success">{successMessage}</p>}
+                  {status === 'failed' && <p className=" no-shadow text-danger">Error: {error}</p>}
 
-                  <button type='submit' className='btn btn-danger mt-2'>Submit</button>
+                  <button type='submit' className='button-create-album mt-2'>Upload Image</button>
                 </form>
               </div>
             )}

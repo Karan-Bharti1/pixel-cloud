@@ -28,6 +28,10 @@ export const postAlbumData=createAsyncThunk( "postAlbums",async({data,token})=>{
     })
     return response.data
 })
+export const deleteAlbumData=createAsyncThunk("deleteAlbums",async(id)=>{
+    const response=await axios.delete(`${baseURL}/album/${id}`)
+    return response.data
+})
  export const albumSlice=createSlice({
 name:"albums",
 initialState:{
@@ -59,6 +63,18 @@ extraReducers:(builder)=>{
         state.status="error"
         state.error=action.payload.message
     })
+    builder.addCase(deleteAlbumData.pending, (state) => {
+    state.status = "loading";
+});
+builder.addCase(deleteAlbumData.fulfilled, (state, action) => {
+    state.status = "succeeded";
+    state.albums = state.albums.filter(album => album._id !== action.payload.id);
+});
+builder.addCase(deleteAlbumData.rejected, (state, action) => {
+    state.status = "error";
+    state.error = action.error.message;
+});
+
 }
 })
 export default albumSlice.reducer
