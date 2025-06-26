@@ -11,6 +11,17 @@ export const getHeaders = (token) => {
     }
     return headers;
   };
+  export const getSingleAlbumData = createAsyncThunk(
+  "album/getSingle",
+  async ({ albumId}) => {
+    try {
+      const response = await axios.get(`${baseURL}/albums/album/${albumId}`);
+      return response.data;
+    } catch (err) {
+      return console.log(err)
+    }
+  }
+);
 export const fetchAlbumsData=createAsyncThunk("fetchAlbums",async({id,token})=>{
     
     const response=await axios.get(`${baseURL}/album/${id}`,{
@@ -30,6 +41,13 @@ export const postAlbumData=createAsyncThunk( "postAlbums",async({data,token})=>{
 })
 export const deleteAlbumData=createAsyncThunk("deleteAlbums",async(id)=>{
     const response=await axios.delete(`${baseURL}/album/${id}`)
+    return response.data
+})
+export const updateAlbumData=createAsyncThunk("updateAlbum",async({id,albumData})=>{
+    console.log(id)
+    const response=await axios.post(`${baseURL}/album/${id}/update`,albumData,{
+     headers:{'Content-Type': 'application/json'}
+    })
     return response.data
 })
  export const albumSlice=createSlice({
@@ -74,7 +92,44 @@ builder.addCase(deleteAlbumData.rejected, (state, action) => {
     state.status = "error";
     state.error = action.error.message;
 });
+  builder.addCase(updateAlbumData.pending, (state) => {
+        state.status = "loading";
+      })
+      builder.addCase(updateAlbumData.fulfilled, (state, action) => {
+  console.log("Updated album:", action.payload);
+  state.status = "succeeded";
+  const updated = action.payload;
+  state.albums = state.albums.map(album =>
+    album._id === updated._id ? updated : album
+  );
+});
 
+      builder.addCase(updateAlbumData.rejected, (state, action) => {
+        state.status = "error";
+        state.error = action.error.message;
+      });
+      builder.addCase(getSingleAlbumData.pending, (state) => {
+    state.status = "loading";
+  })
+
+  
+   builder.addCase(getSingleAlbumData.fulfilled, (state, action) => {
+  state.status = "succeeded";
+  const updatedAlbum = action.payload;
+  const index = state.albums.findIndex(album => album._id === updatedAlbum._id);
+
+  if (index !== -1) {
+    state.albums[index] = updatedAlbum; // update if exists
+  } else {
+    state.albums.push(updatedAlbum);    // insert if not present
+  }
+
+  }) 
+
+  builder.addCase(getSingleAlbumData.rejected, (state, action) => {
+    state.status = "error";
+    state.error = action.payload?.message || action.error.message;
+  })
 }
 })
 export default albumSlice.reducer

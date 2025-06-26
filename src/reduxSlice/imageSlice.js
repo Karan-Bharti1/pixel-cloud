@@ -36,7 +36,7 @@ export const getImagesAlbum = createAsyncThunk(
 );
 export const deleteImagesByAlbumId=createAsyncThunk("images/deleteImagesAlbum",async(albumId)=>{
   try {
-    const response=await axios.delete(`${baseURL}/images/${albumId}`)
+    const response=await axios.delete(`${baseURL}/images/delete-by-album/${albumId}`)
     return response.data
   } catch (error) {
     console.error(error);

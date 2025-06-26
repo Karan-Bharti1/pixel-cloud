@@ -11,11 +11,18 @@ import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteImagesByAlbumId, getImagesAlbum, uploadImage } from '../reduxSlice/imageSlice';
 import { MdDeleteOutline } from "react-icons/md";
-import { deleteAlbumData } from '../reduxSlice/albumSlice';
+import { deleteAlbumData, getSingleAlbumData, updateAlbumData } from '../reduxSlice/albumSlice';
+import AlbumForm from '../../components/AlbumForm';
 function ViewAlbum() {
+   const userdata=localStorage.getItem('user-info')
+ const id=JSON.parse(userdata).id
   const { albumId } = useParams();
   const dispatch = useDispatch();
-
+const [albumData,setAlbumData]=useState({
+  ownerId:id,
+  name:"",
+  description:""
+})
   const fileInputRef = useRef(null);
   const [fileData, setFileData] = useState(null);
   const [name, setName] = useState('');
@@ -23,12 +30,25 @@ function ViewAlbum() {
   const [imgForm, setImageForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 const [deleteAlbumModal,setDeleteAlbumModal]=useState(false)
+const [editAlbumForm,setEditAlbumForm]=useState(false)
 const navigate=useNavigate()
   const { status,images,   error } = useSelector((state) => state.images);
-  const { data, loading } = useFetch(`${baseURL}/albums/album/${albumId}`);
+const { albums, status: albumStatus } = useSelector(state => state.albums);
+  const data = albums.find(album => album._id === albumId);
 useEffect(()=>{
 dispatch(getImagesAlbum(albumId))
+dispatch(getSingleAlbumData({ albumId }))
 },[albumId,dispatch])
+useEffect(() => {
+  if (data) {
+    setAlbumData({
+      ownerId: id,
+      name: data.name || '',
+      description: data.description || ''
+    });
+  }
+}, [data, id]);
+
   const tagOptions = [
     { value: 'nature', label: 'Nature' },
     { value: 'sunset', label: 'Sunset' },
@@ -80,20 +100,33 @@ dispatch(getImagesAlbum(albumId))
     setName('');
     setFileData(null);
     setSuccessMessage("Image Upload Successfully");
-    fileInputRef.current.value = ''; // reset file input
+    fileInputRef.current.value = ''; 
 
     setTimeout(() => {
       setSuccessMessage('');
       setImageForm(false);
     }, 2000);
   };
-console.log(images)
+
 
 const handleAlbumDelete=()=>{
   dispatch(deleteImagesByAlbumId(albumId))
   dispatch(deleteAlbumData(albumId))
   navigate("/dashboard")
 }
+const handleFormChange=(event)=>{
+  const {value,name}=event.target
+  setAlbumData(prev=>({...prev,[name]:value}))
+}
+const handleAlbumFormSubmit = (event) => {
+  event.preventDefault();
+
+  dispatch(updateAlbumData({ id: albumId, albumData })).then(() => {
+    dispatch(getSingleAlbumData({ albumId })); // refetch
+    setEditAlbumForm(false);
+  });
+};
+
   return (
     <div className='container mt-3'>
       <Header />
@@ -104,11 +137,11 @@ const handleAlbumDelete=()=>{
           </Link>
         </div>
 
-        {!loading && (
+        {albumStatus!="loading" && data && (
           <>
             <div className='img-btn-placeholder mt-3'>
               <h1 className='mt-4'>
-                {data.name} <button className='add-img-btn'><MdEdit /></button>
+                {data.name} <button className='add-img-btn' onClick={()=>setEditAlbumForm(true)}><MdEdit /></button>
               </h1>
               <div>
                 <button className='add-img-btn'><FaShareNodes /></button>
@@ -134,6 +167,7 @@ const handleAlbumDelete=()=>{
     ))}
   </div>
 </div>
+{editAlbumForm  &&(<div className='album-form'><AlbumForm setShowForm={setEditAlbumForm} newAlbumData={albumData}  handleFormChange={handleFormChange} handleSubmit={handleAlbumFormSubmit}/></div>)}
 {deleteAlbumModal && (
   <div className="modal d-block album-form" tabIndex="-1" role="dialog" >
     <div className="modal-dialog modal-dialog-centered album-form-inner" role="document">
