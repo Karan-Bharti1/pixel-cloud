@@ -12,9 +12,7 @@ function Home() {
       if(!data){
         navigate("/login")
       }
-        
-        
-       
+     
       },[navigate])
   return (
     <div className='container mt-3'>

@@ -190,12 +190,12 @@ dispatch(updateImageData({id,updatedData}))
         </button>
 
         {/* Info */}
-        <button
+        <Link
           className="btn btn-secondary btn-sm"
-
+to={`/album/image/${i?._id}`}
         >
           < RiInformation2Fill/>
-        </button>
+        </Link>
 
         {/* Delete */}
         <button
