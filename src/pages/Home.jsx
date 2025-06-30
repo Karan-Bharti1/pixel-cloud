@@ -31,17 +31,17 @@ function Home() {
   <div className="col-md-4">
   
     <h5 className="mt-3">Upload Instantly</h5>
-    <p>Save your memories safely in the cloud.</p>
+    <p className='no-shadow'>Save your memories safely in the cloud.</p>
   </div>
   <div className="col-md-4">
 
     <h5 className="mt-3">Organize Albums</h5>
-    <p>Create custom albums with names and covers.</p>
+    <p className='no-shadow'>Create custom albums with names and covers.</p>
   </div>
   <div className="col-md-4">
  
     <h5 className="mt-3">Share Easily</h5>
-    <p>Send albums to friends and family with one click.</p>
+    <p className='no-shadow'>Send albums to friends and family with one click.</p>
   </div>
 </div>
 <h2 className="text-center mt-5">Get Started in 4 Easy Steps</h2>
@@ -50,28 +50,28 @@ function Home() {
     <div className="card shadow p-3 rounded-4 h-100 text-center">
       <div className="number bg-primary text-white" >1</div>
       <h5 className="fw-bold">Go to Dashboard</h5>
-      <p>Access your main area where all albums are managed.</p>
+      <p className='no-shadow'>Access your main area where all albums are managed.</p>
     </div>
   </div>
   <div className="col-md-3 mb-4">
     <div className="card shadow p-3 rounded-4 h-100 text-center">
       <div className="number bg-primary text-white" >2</div>
       <h5 className="fw-bold">Create Album</h5>
-      <p>Click on the “Create Album” button to start a new one.</p>
+      <p className='no-shadow'>Click on the “Create Album” button to start a new one.</p>
     </div>
   </div>
   <div className="col-md-3 mb-4">
     <div className="card shadow p-3 rounded-4 h-100 text-center">
       <div className="number bg-primary text-white" >3</div>
       <h5 className="fw-bold">Select Album</h5>
-      <p>Choose the album where you want to upload your images.</p>
+      <p className='no-shadow'>Choose the album where you want to upload your images.</p>
     </div>
   </div>
   <div className="col-md-3 mb-4">
     <div className="card shadow p-3 rounded-4 h-100 text-center">
       <div className="number bg-primary text-white" >4</div>
       <h5 className="fw-bold">Upload Image</h5>
-      <p>Select images from your device and upload them to your album.</p>
+      <p className='no-shadow'>Select images from your device and upload them to your album.</p>
     </div>
   </div>
 </div>

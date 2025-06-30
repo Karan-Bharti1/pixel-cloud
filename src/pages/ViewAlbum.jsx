@@ -1,17 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Header from '../../components/Header';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { MdEdit, MdDeleteOutline } from "react-icons/md";
+import { MdEdit, MdDeleteOutline,MdDelete } from "react-icons/md";
 import { FaShareNodes } from "react-icons/fa6";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoCloseSharp } from "react-icons/io5";
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteImagesByAlbumId, getImagesAlbum, uploadImage } from '../reduxSlice/imageSlice';
+import { deleteImage, deleteImagesByAlbumId, getImagesAlbum, uploadImage } from '../reduxSlice/imageSlice';
 import { deleteAlbumData, getSingleAlbumData, updateAlbumData } from '../reduxSlice/albumSlice';
 import AlbumForm from '../../components/AlbumForm';
 import Lightbox from 'react-awesome-lightbox';
 import 'react-awesome-lightbox/build/style.css';
+import { BiSolidLike } from "react-icons/bi";
+import { SlLike } from "react-icons/sl";
+import { RiInformation2Fill } from "react-icons/ri"
 
 function ViewAlbum() {
   const userdata = localStorage.getItem('user-info');
@@ -62,6 +65,7 @@ function ViewAlbum() {
     { value: 'portrait', label: 'Portrait' },
     { value: 'mountain', label: 'Mountain' },
     { value: 'beach', label: 'Beach' },
+    {value:'office',label:"Office"}
   ];
 
   const handleTagChange = (selected) => setTags(selected || []);
@@ -122,6 +126,9 @@ function ViewAlbum() {
       setEditAlbumForm(false);
     });
   };
+  const handleDeleteImage=(id)=>{
+dispatch(deleteImage({id}))
+  }
 
   return (
     <div className='container mt-3'>
@@ -151,27 +158,68 @@ function ViewAlbum() {
             )}
 
             <div className="container mt-4">
-              <div className="row image-gallery-grid mt-4">
-                {images && images.map((i, index) => (
-                  <div key={i._id} className="gallery-item col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
-                    <img
-                      src={i.imageUrl}
-                      alt={i.name}
-                      className="gallery-image img-fluid rounded shadow-sm"
-                      onClick={() => setLightboxIndex(index)}
-                      style={{ cursor: 'zoom-in', objectFit: 'cover', height: '200px', width: '100%' }}
-                    />
-                  </div>
-                ))}
-              </div>
+             <div className="container mt-4">
+  <div className="row">
+{images && images.map((i, index) => (
+  <div key={i._id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+    <div className="position-relative">
+      {/* Image */}
+      <img
+        src={i.imageUrl}
+        alt={i.name}
+        className="img-fluid rounded shadow-sm w-100"
+        onClick={() => setLightboxIndex(index)}
+        style={{
+          height: '250px',
+          objectFit: 'cover',
+          cursor: 'zoom-in'
+        }}
+      />
+
+      {/* Buttons Group - Top Right Corner */}
+      <div className="position-absolute top-0 end-0 m-2 d-flex flex-row align-items-end gap-2">
+        {/* Like */}
+        <button
+          className="btn btn-secondary btn-sm "
+          
+        >
+          {i.isLiked ?<BiSolidLike/>:< SlLike/>}
+        </button>
+
+        {/* Info */}
+        <button
+          className="btn btn-secondary btn-sm"
+    
+        >
+          < RiInformation2Fill/>
+        </button>
+
+        {/* Delete */}
+        <button
+          className="btn btn-secondary btn-sm" onClick={()=>handleDeleteImage(i._id)}
+           >
+          <MdDelete/>
+        </button>
+      </div>
+    </div>
+  </div>
+))}
+
+  </div>
+</div>
+
             </div>
 
             {lightboxIndex !== null && (
+              <div>
               <Lightbox
                 images={images.map(img => ({ url: img.imageUrl, title: img.name }))}
                 startIndex={lightboxIndex}
                 onClose={() => setLightboxIndex(null)}
               />
+              <div>  
+  </div>
+  </div>
             )}
 
             {editAlbumForm && (

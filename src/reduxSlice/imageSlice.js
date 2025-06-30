@@ -42,6 +42,14 @@ export const deleteImagesByAlbumId=createAsyncThunk("images/deleteImagesAlbum",a
     console.error(error);
   }
 })
+export const deleteImage=createAsyncThunk("images/deleteImage",async({id})=>{
+  try {
+    const response=axios.delete(`${baseURL}/image/${id}`)
+    return response.data
+  } catch (error) {
+     console.error(error);
+  }
+})
 // Slice
 export const imageSlice = createSlice({
   name: "images",
@@ -52,50 +60,67 @@ export const imageSlice = createSlice({
   },
   reducers: {},
 extraReducers: (builder) => {
-  builder
-    // Upload image
-    .addCase(uploadImage.pending, (state) => {
-      state.status = "loading";
-      state.error = null;
-    })
-    .addCase(uploadImage.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.images.push(action.payload); // Append the uploaded image
-    })
-    .addCase(uploadImage.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload;
-    })
+    builder
+      // Upload image
+      .addCase(uploadImage.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(uploadImage.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.images.push(action.payload); // Append the uploaded image
+      })
+      .addCase(uploadImage.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
 
-    // Get images of album
-    .addCase(getImagesAlbum.pending, (state) => {
-      state.status = "loading";
-      state.error = null;
-    })
-    .addCase(getImagesAlbum.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      state.images = action.payload; // Replace with fetched images
-    })
-    .addCase(getImagesAlbum.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload || "Failed to fetch images";
-    })
+      // Get images of album
+      .addCase(getImagesAlbum.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getImagesAlbum.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.images = action.payload; // Replace with fetched images
+      })
+      .addCase(getImagesAlbum.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to fetch images";
+      })
 
-    // Delete images by albumId
-    .addCase(deleteImagesByAlbumId.pending, (state) => {
-      state.status = "loading";
-      state.error = null;
-    })
-    .addCase(deleteImagesByAlbumId.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      // Assuming delete returns a success message, not updated images
-      state.images = state.images.filter(image => image.albumId !== action.meta.arg);
-    })
-    .addCase(deleteImagesByAlbumId.rejected, (state, action) => {
-      state.status = "failed";
-      state.error = action.payload || "Failed to delete images";
-    });
-}
-})
+      // Delete images by albumId
+      .addCase(deleteImagesByAlbumId.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(deleteImagesByAlbumId.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.images = state.images.filter(
+          (image) => image.albumId !== action.meta.arg
+        );
+      })
+      .addCase(deleteImagesByAlbumId.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to delete images";
+      })
+
+      // Delete single image
+      .addCase(deleteImage.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(deleteImage.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.images = state.images.filter(
+          (image) => image._id !== action.meta.arg.id
+        );
+      })
+      .addCase(deleteImage.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to delete image";
+      });
+  },
+});
 
 export default imageSlice.reducer;
