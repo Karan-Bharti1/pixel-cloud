@@ -44,10 +44,20 @@ export const deleteImagesByAlbumId=createAsyncThunk("images/deleteImagesAlbum",a
 })
 export const deleteImage=createAsyncThunk("images/deleteImage",async({id})=>{
   try {
-    const response=axios.delete(`${baseURL}/image/${id}`)
-    return response.data
+    const response= await axios.delete(`${baseURL}/image/${id}`)
+    return {id}
   } catch (error) {
      console.error(error);
+  }
+})
+export const updateImageData=createAsyncThunk("images/updateImage",async({id,updatedData})=>{
+  try {
+    const response=await axios.post(`${baseURL}/image-update/${id}`,updatedData,{ headers: {
+          "Content-Type": "application/json",
+        }})
+        return response.data
+  } catch (error) {
+        console.error(error);
   }
 })
 // Slice
@@ -112,6 +122,7 @@ extraReducers: (builder) => {
       })
       .addCase(deleteImage.fulfilled, (state, action) => {
         state.status = "succeeded";
+        console.log(action.payload)
         state.images = state.images.filter(
           (image) => image._id !== action.meta.arg.id
         );
@@ -119,6 +130,22 @@ extraReducers: (builder) => {
       .addCase(deleteImage.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || "Failed to delete image";
+      })
+      .addCase(updateImageData.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(updateImageData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const updatedImage = action.payload;
+        const index = state.images.findIndex((img) => img._id === updatedImage._id);
+        if (index !== -1) {
+          state.images[index] = updatedImage;
+        }
+      })
+      .addCase(updateImageData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to update image";
       });
   },
 });

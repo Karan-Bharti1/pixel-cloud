@@ -7,7 +7,7 @@ import { BiSolidImageAdd } from "react-icons/bi";
 import { IoCloseSharp } from "react-icons/io5";
 import Select from 'react-select';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteImage, deleteImagesByAlbumId, getImagesAlbum, uploadImage } from '../reduxSlice/imageSlice';
+import { deleteImage, deleteImagesByAlbumId, getImagesAlbum, updateImageData, uploadImage } from '../reduxSlice/imageSlice';
 import { deleteAlbumData, getSingleAlbumData, updateAlbumData } from '../reduxSlice/albumSlice';
 import AlbumForm from '../../components/AlbumForm';
 import Lightbox from 'react-awesome-lightbox';
@@ -129,7 +129,10 @@ function ViewAlbum() {
   const handleDeleteImage=(id)=>{
 dispatch(deleteImage({id}))
   }
-
+const handleImageLike=(id,isFavorite)=>{
+const updatedData={isFavorite:!isFavorite}
+dispatch(updateImageData({id,updatedData}))
+}
   return (
     <div className='container mt-3'>
       <Header />
@@ -180,16 +183,16 @@ dispatch(deleteImage({id}))
       <div className="position-absolute top-0 end-0 m-2 d-flex flex-row align-items-end gap-2">
         {/* Like */}
         <button
-          className="btn btn-secondary btn-sm "
-          
+          className="btn btn-secondary btn-sm"
+          onClick={()=>handleImageLike(i._id,i.isFavorite)}
         >
-          {i.isLiked ?<BiSolidLike/>:< SlLike/>}
+          {i.isFavorite ?<BiSolidLike/>:< SlLike/>}
         </button>
 
         {/* Info */}
         <button
           className="btn btn-secondary btn-sm"
-    
+
         >
           < RiInformation2Fill/>
         </button>
