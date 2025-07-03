@@ -15,7 +15,7 @@ import 'react-awesome-lightbox/build/style.css';
 import { BiSolidLike } from "react-icons/bi";
 import { SlLike } from "react-icons/sl";
 import { RiInformation2Fill } from "react-icons/ri"
-
+import { IoMdArrowRoundBack } from "react-icons/io";
 function ViewAlbum() {
   const userdata = localStorage.getItem('user-info');
   const id = JSON.parse(userdata).id;
@@ -137,25 +137,26 @@ dispatch(updateImageData({id,updatedData}))
     <div className='container mt-3'>
       <Header />
       <main className='container mt-3'>
-        <div className='view-album-head'>
-          <Link to="/dashboard" className="button-create-album text-decoration-none">
-            Back to Dashboard
-          </Link>
-        </div>
+        
 
         {albumStatus !== "loading" && data && (
           <>
             <div className='img-btn-placeholder mt-3'>
-              <h1 className='mt-4'>
-                {data.name} <button className='add-img-btn' onClick={() => setEditAlbumForm(true)}><MdEdit /></button>
-              </h1>
+              <div >
+          <Link to="/dashboard" className="add-img-btn text-decoration-none">
+           <IoMdArrowRoundBack/>
+          </Link>
+        </div>
+             
               <div>
                 <button className='add-img-btn'><FaShareNodes /></button>
                 <button onClick={() => setImageForm(!imgForm)} className='add-img-btn'><BiSolidImageAdd /></button>
                 <button className='add-img-btn' onClick={() => setDeleteAlbumModal(true)}><MdDeleteOutline /></button>
               </div>
             </div>
-
+ <h2 className='mt-4 text-center'>
+                {data.name} <button className='add-img-btn' onClick={() => setEditAlbumForm(true)}><MdEdit /></button>
+              </h2>
             {data.description?.length > 0 && (
               <h4 className='text-center mt-3'>{data.description}</h4>
             )}
@@ -163,7 +164,7 @@ dispatch(updateImageData({id,updatedData}))
             <div className="container mt-4">
              <div className="container mt-4">
   <div className="row">
-{images && images.map((i, index) => (
+{images &&images.length>0 ? images.map((i, index) => (
   <div key={i._id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
     <div className="position-relative">
       {/* Image */}
@@ -206,7 +207,14 @@ to={`/album/image/${i?._id}`}
       </div>
     </div>
   </div>
-))}
+)):( <div className="text-center mt-5">
+      <p className="text-secondary fs-4 fw-semibold">
+        No images found in this album.
+      </p>
+      <p className="text-muted">
+        Click <BiSolidImageAdd className="mb-1" /> to upload your first image.
+      </p>
+    </div>)}
 
   </div>
 </div>
