@@ -44,7 +44,7 @@ export const deleteAlbumData=createAsyncThunk("deleteAlbums",async(id)=>{
     return response.data
 })
 export const updateAlbumData=createAsyncThunk("updateAlbum",async({id,albumData})=>{
-    console.log(id)
+    
     const response=await axios.post(`${baseURL}/album/${id}/update`,albumData,{
      headers:{'Content-Type': 'application/json'}
     })

@@ -60,6 +60,14 @@ export const updateImageData=createAsyncThunk("images/updateImage",async({id,upd
         console.error(error);
   }
 })
+export const findImageData=createAsyncThunk("images/viewImage",async({id})=>{
+  try {
+    const response=await axios.get(`${baseURL}/image/${id}`)
+    return response.data
+  } catch (error) {
+     console.error(error);
+  }
+})
 // Slice
 export const imageSlice = createSlice({
   name: "images",
@@ -146,7 +154,29 @@ extraReducers: (builder) => {
       .addCase(updateImageData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || "Failed to update image";
-      });
+      })
+      .addCase(findImageData.pending,state=>{
+             state.status = "loading";
+      })
+      .addCase(findImageData.fulfilled, (state, action) => {
+  state.status = "succeeded";
+  const foundImage = action.payload;
+  const index = state.images.findIndex(img => img._id === foundImage._id);
+  if (index !== -1) {
+    // Update existing image
+    state.images[index] = {
+      ...state.images[index],
+      ...foundImage,
+    };
+  } else {
+    // Image not found, add it
+    state.images.push(foundImage);
+  }
+})
+      .addCase(findImageData.rejected,(state,action)=>{
+        state.status="error"
+        state.error=action.payload
+      })
   },
 });
 
