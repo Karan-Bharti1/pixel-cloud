@@ -14,6 +14,7 @@ function ViewImage() {
   const state=useSelector(state=>state.images)
   const commentState=useSelector(state=>state.comments)
   const [viewComments,setViewComments]=useState(false)
+  const [viewDetails,setViewDetails]=useState(false)
   const {imageId}=useParams()
   const [comment,setComment]=useState({imageId:imageId,text:""})
      const navigate=useNavigate()
@@ -41,7 +42,7 @@ setComment({...comment,text:event.target.value})
     },1000)
    
   }
- 
+ console.log(image)
   return (
    <div className='container mt-3'>
     <Header/>
@@ -53,11 +54,23 @@ setComment({...comment,text:event.target.value})
             </div>
             <div>
             <button className='add-img-btn' onClick={()=>setViewComments(!viewComments)}><FaRegCommentDots/></button>
-            <button className='add-img-btn'><CgDetailsMore/></button>
+            <button className='add-img-btn' onClick={()=>setViewDetails(!viewDetails)}><CgDetailsMore/></button>
             <button className='add-img-btn'><MdEdit/></button>
             </div>
           </div>
           <img src={image?.imageUrl} className='viewImage'/>
+          <br/><br/>
+{viewDetails && (  <div className="w-75 mx-auto  text-white p-4 rounded-3 shadow-sm mt-3">
+    <h4 className="fw-bold mb-4">Image Details</h4>
+    <ul className="list-unstyled">
+      <li className='text-secondary'>Name: {image?.name}</li>
+      <li className='text-secondary'>Size: {(image?.size / 1024).toFixed(2)} KB</li>
+      <li className='text-secondary'>Liked: {image?.isFavorite ? 'Yes' : 'No'}</li>
+      <li className='text-secondary'>Tags: {image?.tags?.length > 0 ? image.tags.join(', ') : 'None'}</li>
+      <li className='text-secondary'>Uploaded at: {new Date(image?.uploadedAt).toLocaleString()}</li>
+      <li className='text-secondary'>Updated at: {new Date(image?.updatedAt).toLocaleString()}</li>
+    </ul>
+  </div>)}
        {viewComments && (
   <div className="mt-5 w-75 mx-auto">
     {/* Add Comment Box */}
@@ -100,8 +113,10 @@ setComment({...comment,text:event.target.value})
   
 )}
 
-<br/><br/>
+
+        <br/><br/>
         </div>}
+        
     </main>
    </div>
   )
