@@ -61,6 +61,7 @@ reducers:{},
 extraReducers:(builder)=>{
     builder.addCase(fetchAlbumsData.pending,state=>{
         state.status="loading"
+        
     })
     builder.addCase(fetchAlbumsData.fulfilled,(state,action)=>{
         state.status="succeeded"
@@ -100,7 +101,7 @@ builder.addCase(deleteAlbumData.rejected, (state, action) => {
   state.status = "succeeded";
   const updated = action.payload;
   state.albums = state.albums.map(album =>
-    album._id === updated._id ? updated : album
+    album._id === updated._id ? updated?.updateData : album
   );
 });
 
@@ -110,6 +111,7 @@ builder.addCase(deleteAlbumData.rejected, (state, action) => {
       });
       builder.addCase(getSingleAlbumData.pending, (state) => {
     state.status = "loading";
+    state.albums=[]
   })
 
   
@@ -119,9 +121,9 @@ builder.addCase(deleteAlbumData.rejected, (state, action) => {
   const index = state.albums.findIndex(album => album._id === updatedAlbum._id);
 
   if (index !== -1) {
-    state.albums[index] = updatedAlbum; // update if exists
+    state.albums[index] = updatedAlbum; 
   } else {
-    state.albums.push(updatedAlbum);    // insert if not present
+    state.albums.push(updatedAlbum);   
   }
 
   }) 

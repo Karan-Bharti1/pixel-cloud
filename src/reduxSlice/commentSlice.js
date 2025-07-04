@@ -35,6 +35,7 @@ state.error=action.payload
         })
             builder.addCase(getCommentsData.pending, (state) => {
         state.status = "loading";
+         state.comments = [];
       })
       builder.addCase(getCommentsData.fulfilled, (state, action) => {
         state.status = "succeeded";

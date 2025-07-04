@@ -2,20 +2,36 @@ import React, {useEffect,useState} from 'react'
 import Header from '../../components/Header'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { findImageData } from '../reduxSlice/imageSlice'
+import { findImageData, updateImageData } from '../reduxSlice/imageSlice'
 import { FaRegCommentDots } from "react-icons/fa"
 import { MdEdit, MdDeleteOutline,MdDelete } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { CgDetailsMore } from "react-icons/cg";
 import { Link } from 'react-router-dom'
 import { getCommentsData, postCommentData } from '../reduxSlice/commentSlice'
+import ImageForm from '../../components/ImageForm'
+
 function ViewImage() {
   const dispatch=useDispatch()
   const state=useSelector(state=>state.images)
+ 
   const commentState=useSelector(state=>state.comments)
   const [viewComments,setViewComments]=useState(false)
   const [viewDetails,setViewDetails]=useState(false)
+  const [imgForm,setImageForm]=useState(false)
+   const [successMessage, setSuccessMessage] = useState('');
+    const [name, setName] = useState('');
+    const [tags, setTags] = useState([]);
   const {imageId}=useParams()
+    const tagOptions = [
+    { value: 'nature', label: 'Nature' },
+    { value: 'sunset', label: 'Sunset' },
+    { value: 'city', label: 'City' },
+    { value: 'portrait', label: 'Portrait' },
+    { value: 'mountain', label: 'Mountain' },
+    { value: 'beach', label: 'Beach' },
+    {value:'office',label:"Office"}
+  ];
   const [comment,setComment]=useState({imageId:imageId,text:""})
      const navigate=useNavigate()
       useEffect(()=>{
@@ -28,10 +44,22 @@ function ViewImage() {
    
  
    useEffect(()=>{
+   
 dispatch(findImageData({id:imageId}))
 dispatch(getCommentsData({id:imageId}))
    },[dispatch,imageId])
+   
 const image = state.images.find(img => img?._id === imageId)
+useEffect(()=>{
+    setName(image?.name)
+  
+  if (image?.tags) {
+
+    const formattedTags = tagOptions.filter(opt => image?.tags.includes(opt.value));
+    setTags(formattedTags);
+  }
+
+   },[image])
   const handleCommentChange=(event)=>{
 setComment({...comment,text:event.target.value})
   }
@@ -42,7 +70,13 @@ setComment({...comment,text:event.target.value})
     },1000)
    
   }
- console.log(image)
+    const handleTagChange = (selected) => setTags(selected || []);
+const handleSubmit=(event)=>{
+event.preventDefault()
+const formattedTags=tags.map(tag=>tag.value)
+dispatch(updateImageData({id:imageId,updatedData:{name:name,tags:formattedTags}}))
+}
+
   return (
    <div className='container mt-3'>
     <Header/>
@@ -55,7 +89,7 @@ setComment({...comment,text:event.target.value})
             <div>
             <button className='add-img-btn' onClick={()=>setViewComments(!viewComments)}><FaRegCommentDots/></button>
             <button className='add-img-btn' onClick={()=>setViewDetails(!viewDetails)}><CgDetailsMore/></button>
-            <button className='add-img-btn'><MdEdit/></button>
+            <button className='add-img-btn' onClick={()=>setImageForm(!imgForm)}><MdEdit/></button>
             </div>
           </div>
           <img src={image?.imageUrl} className='viewImage'/>
@@ -106,13 +140,30 @@ setComment({...comment,text:event.target.value})
           ))}
         </div>
       ) : (
-        <p className="text-muted text-center fs-4 fw-bolder">No Comments Found.</p>
+        <p className="text-secondary text-center fs-4 fw-bolder">No Comments Found.</p>
       )} 
     </div>
   </div>
   
 )}
+{imgForm &&(
+  <>
+ <ImageForm
+  postForm={false}
+  setImageForm={setImageForm}
+  tagOptions={tagOptions}
+  status={state.status}
+  error={state.error}
+  name={name}
+  setName={setName}
+  tags={tags}
+  handleTagChange={handleTagChange}
+  successMessage={successMessage}
+  handleSubmit={handleSubmit}
+/>
 
+  </>
+)}
 
         <br/><br/>
         </div>}

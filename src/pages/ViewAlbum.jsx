@@ -5,7 +5,9 @@ import { MdEdit, MdDeleteOutline,MdDelete } from "react-icons/md";
 import { FaShareNodes } from "react-icons/fa6";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoCloseSharp } from "react-icons/io5";
+import ImageForm from '../../components/ImageForm';
 import Select from 'react-select';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteImage, deleteImagesByAlbumId, getImagesAlbum, updateImageData, uploadImage } from '../reduxSlice/imageSlice';
 import { deleteAlbumData, getSingleAlbumData, updateAlbumData } from '../reduxSlice/albumSlice';
@@ -16,6 +18,7 @@ import { BiSolidLike } from "react-icons/bi";
 import { SlLike } from "react-icons/sl";
 import { RiInformation2Fill } from "react-icons/ri"
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { baseURL } from '../url';
 function ViewAlbum() {
   const userdata = localStorage.getItem('user-info');
   const id = JSON.parse(userdata).id;
@@ -38,7 +41,10 @@ function ViewAlbum() {
   const [deleteAlbumModal, setDeleteAlbumModal] = useState(false);
   const [editAlbumForm, setEditAlbumForm] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(null);
-
+  const [selectedEmails, setSelectedEmails] = useState([]);
+  const [emailSuccessMessage,setEmailSuccessMessage]=useState("")
+  const [email,setEmail]=useState()
+const [shareForm,setShareForm]=useState(false)
   const { status, images, error } = useSelector(state => state.images);
   const { albums, status: albumStatus } = useSelector(state => state.albums);
   const data = albums.find(album => album._id === albumId);
@@ -133,6 +139,72 @@ const handleImageLike=(id,isFavorite)=>{
 const updatedData={isFavorite:!isFavorite}
 dispatch(updateImageData({id,updatedData}))
 }
+ const albumUsers=albums?.find(album=>album._id===albumId)?.sharedUsers
+const handleUserAddition = () => {
+  if (!email) return;
+
+  const existingUsers = data?.sharedUsers || [];
+  const alreadyExists = existingUsers.includes(email);
+  if (alreadyExists) return; // prevent duplicates
+
+  const updatedData = { sharedUsers: [...existingUsers, email] };
+
+  dispatch(updateAlbumData({ id: albumId, albumData: updatedData }))
+    .then(() => {
+      
+      dispatch(getSingleAlbumData({ albumId }));
+      setEmail('');
+    });
+};
+console.log(images)
+const handleEmailCheckbox = (event) => {
+  const { value, checked } = event.target;
+
+  if (checked) {
+    setSelectedEmails(prev => [...prev, value]);
+  } else {
+    setSelectedEmails(prev => prev.filter(email => email !== value));
+  }
+};
+const handleShareAlbum = async () => {
+  if (selectedEmails.length === 0) {
+   
+    return;
+  }
+
+  const data = {
+    images: images.map(img => img.imageUrl),
+    users: selectedEmails,
+  };
+console.log(selectedEmails)
+  try {
+    const response = await fetch(`${baseURL}/albums/${albumId}/share`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log( result.message);
+      setEmailSuccessMessage("Album shared successfully!");
+    } else {
+      const error = await response.json();
+      console.error( error.message);
+      setEmailSuccessMessage("Failed to share album.");
+    }
+  } catch (err) {
+    console.error(" Error while sharing:", err);
+    setEmailSuccessMessage("An error occurred while sharing the album.");
+  }
+  setTimeout(() => {
+    setShareForm(false)
+    setEmailSuccessMessage("")
+  }, 5000);
+};
+
   return (
     <div className='container mt-3'>
       <Header />
@@ -149,7 +221,7 @@ dispatch(updateImageData({id,updatedData}))
         </div>
              
               <div>
-                <button className='add-img-btn'><FaShareNodes /></button>
+                <button className='add-img-btn' onClick={()=>setShareForm(true)}><FaShareNodes /></button>
                 <button onClick={() => setImageForm(!imgForm)} className='add-img-btn'><BiSolidImageAdd /></button>
                 <button className='add-img-btn' onClick={() => setDeleteAlbumModal(true)}><MdDeleteOutline /></button>
               </div>
@@ -243,7 +315,52 @@ to={`/album/image/${i?._id}`}
                 />
               </div>
             )}
-
+{shareForm && (
+  <div className='album-form'>
+    <div className='album-form-inner bg-light' >
+      <div className='form-detail-handler'>
+                          <h2 className='text-secondary'>Share your album</h2>
+                          <button type="button" className='btn' onClick={() => setShareForm(false)}>
+                            <IoCloseSharp />
+                          </button>
+                        </div>
+                        <br/>
+                        <form style={{ display: 'flex', alignItems: 'center', gap: '8px' }} onSubmit={handleUserAddition}>
+      <input
+        type='email'
+        name='email'
+        className='form-control'
+        value={email}
+        placeholder='Enter email'
+        onChange={e => setEmail(e.target.value)}
+        required
+      />
+      <button className='button-create-album btn btn-primary' type='submit'>+</button>
+      </form>
+       
+      <hr className='text-dark'/>
+     
+      <div>
+          <h6 className='text-secondary'>Share with:</h6>
+       <ul className="list-group">
+  {(albumUsers?.length > 0)
+    ? albumUsers.map((e, i) => (
+      <li key={i} className="list-group-item d-flex align-items-center gap-2 py-2">
+        <input type="checkbox" value={e} onChange={handleEmailCheckbox}/>
+        <span>{e}</span> 
+      </li>
+    ))
+    : <li className='list-group-item text-muted'>No users yet</li>
+  }
+</ul>
+<br/>
+<button className='button-create-album' onClick={handleShareAlbum}>Share</button>
+<br/>
+<h4 className='text-secondary mt-3'>{emailSuccessMessage}</h4>
+      </div>
+    </div>
+  </div>
+)}
             {deleteAlbumModal && (
               <div className="modal d-block album-form" tabIndex="-1" role="dialog">
                 <div className="modal-dialog modal-dialog-centered album-form-inner" role="document">
@@ -264,65 +381,21 @@ to={`/album/image/${i?._id}`}
             )}
 
             {imgForm && (
-              <div className='album-form'>
-                <form className='album-form-inner bg-light' onSubmit={handleSubmit}>
-                  <div className='form-detail-handler'>
-                    <h2 className='text-secondary'>Upload Image</h2>
-                    <button type="button" className='btn' onClick={() => setImageForm(false)}>
-                      <IoCloseSharp />
-                    </button>
-                  </div>
-
-                  <input
-                    type='file'
-                    className='form-control mt-2'
-                    accept='.jpg,.jpeg,.png,.gif'
-                    onChange={handleFileUpdate}
-                    ref={fileInputRef}
-                    required
-                  />
-                  <br />
-                  <label className='text-secondary'>Image Name :</label>
-                  <input
-                    type="text"
-                    className='form-control'
-                    placeholder='Pixel Name'
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-
-                  <label className='text-secondary mt-3'>Select Tags :</label>
-                  <Select
-                    isMulti
-                    options={tagOptions}
-                    value={tags}
-                    onChange={handleTagChange}
-                    placeholder="Choose tags..."
-                    styles={{
-                      option: (provided) => ({
-                        ...provided,
-                        color: 'black',
-                        backgroundColor: 'white',
-                      }),
-                      singleValue: (provided) => ({
-                        ...provided,
-                        color: 'black'
-                      }),
-                    }}
-                  />
-                  <br />
-                  <p className='text-secondary no-shadow'>
-                    <strong>Note:</strong> Only <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code>, and <code>.gif</code> images are allowed. Max file size: <strong>5MB</strong>.
-                  </p>
-
-                  {status === 'loading' && <p className="no-shadow text-info">Uploading...</p>}
-                  {status === 'succeeded' && <p className="no-shadow text-success">{successMessage}</p>}
-                  {status === 'failed' && <p className="no-shadow text-danger">Error: {error}</p>}
-
-                  <button type='submit' className='button-create-album mt-2'>Upload Image</button>
-                </form>
-              </div>
+               <ImageForm
+               postForm={true}
+          handleSubmit={handleSubmit}
+          setImageForm={setImageForm}
+          handleFileUpdate={handleFileUpdate}
+          fileInputRef={fileInputRef}
+          setName={setName}
+          tags={tags}
+          tagOptions={tagOptions}
+          handleTagChange={handleTagChange}
+          successMessage={successMessage}
+          error={error}
+          name={name}
+          status={status}
+        />
             )}
           </>
         )}
