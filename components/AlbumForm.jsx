@@ -5,7 +5,7 @@ function AlbumForm({handleSubmit,setShowForm,newAlbumData,handleFormChange}) {
   <form onSubmit={handleSubmit}  className='album-form-inner bg-light'>
 <div className='form-detail-handler'>
   <h2 className=' text-secondary'>New Album</h2>
-  <button className='btn btn-close-white' onClick={()=>setShowForm(false)}><IoCloseSharp/></button>
+  <button className='btn text-dark' onClick={()=>setShowForm(false)}><IoCloseSharp/></button>
   </div>
   <label className='text-secondary'> Album's name :</label>
 <input type='text' name="name" value={newAlbumData.name} className='form-control' onChange={handleFormChange} placeholder='Album Name'/>

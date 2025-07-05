@@ -8,7 +8,11 @@ import Header from '../components/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAlbumsData, postAlbumData } from './reduxSlice/albumSlice'
 import { IoCloseSharp } from "react-icons/io5";
+import { FaHeart } from "react-icons/fa";
+
+import { BiSolidPhotoAlbum } from "react-icons/bi";
 import AlbumForm from '../components/AlbumForm'
+import LikedImagesBanner from '../components/LikedImageBanner'
 function App() {
 const navigate=useNavigate()
 const [showForm,setShowForm]=useState(false)
@@ -105,7 +109,9 @@ setShowForm(false)
   </>
 )}
 {state.status!="loading"&& state.albums.length>0 &&(<>
+  <LikedImagesBanner/>
 <div  className='head-container'>
+
   <h1 className='mt-3'>My Albums</h1>
   <button className="button-create-album" onClick={()=>setShowForm(true)}>+ Create New Album</button>
 </div>
@@ -115,13 +121,22 @@ setShowForm(false)
   <div key={album._id} className="col-md-3 col-sm-6 mb-4">
     <Link className='text-decoration-none' to={`/album/${album._id}`}>
  
+
 <div
-  className="card-ablum d-flex flex-column justify-content-between shadow-lg rounded-4 p-4 text-white" style={{height:"200px"}}
+  className="card album-card shadow-lg rounded-4 p-4 text-white"
+  style={{
+    background: "linear-gradient(135deg, #2b2b2b, #1c1c1c)",
+    height: "200px",
+    position: "relative",
+    border: "none",
+  }}
 >
-  <div className="mb-auto"> </div>
+  <div className="album-icon text-end">
+    <BiSolidPhotoAlbum className="text-white-50" size={32} />
+  </div>
 
   <div className="mt-auto">
-    <h5 className="fw-semibold mb-1 ">{album.name}</h5>
+    <h5 className="fw-bold text-white">{album.name}</h5>
   </div>
 </div>
 

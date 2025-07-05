@@ -75,6 +75,9 @@ const handleSubmit=(event)=>{
 event.preventDefault()
 const formattedTags=tags.map(tag=>tag.value)
 dispatch(updateImageData({id:imageId,updatedData:{name:name,tags:formattedTags}}))
+setTimeout(()=>{
+  setImageForm(false)
+},1000)
 }
 
   return (

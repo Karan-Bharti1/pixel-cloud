@@ -252,7 +252,6 @@ console.log(selectedEmails)
         }}
       />
 
-      {/* Buttons Group - Top Right Corner */}
       <div className="position-absolute top-0 end-0 m-2 d-flex flex-row align-items-end gap-2">
         {/* Like */}
         <button
@@ -283,7 +282,7 @@ to={`/album/image/${i?._id}`}
       <p className="text-secondary fs-4 fw-semibold">
         No images found in this album.
       </p>
-      <p className="text-muted">
+      <p className="text-secondary">
         Click <BiSolidImageAdd className="mb-1" /> to upload your first image.
       </p>
     </div>)}
@@ -320,7 +319,7 @@ to={`/album/image/${i?._id}`}
     <div className='album-form-inner bg-light' >
       <div className='form-detail-handler'>
                           <h2 className='text-secondary'>Share your album</h2>
-                          <button type="button" className='btn' onClick={() => setShareForm(false)}>
+                          <button type="button" className='btn text-dark' onClick={() => setShareForm(false)}>
                             <IoCloseSharp />
                           </button>
                         </div>

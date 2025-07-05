@@ -61,6 +61,24 @@ align-items: center;
   background-color: var(--secondary);
     color:white;
 }
+.album-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.album-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.6);
+}
+
+.album-icon {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  opacity: 0.4;
+}
+.album-card:hover .album-icon {
+  opacity: 0.7;
+}
+
 .button-create-album {
   
   background: linear-gradient(135deg, var(--button-primary) 0%, var(--button-secondary) 100%);
@@ -165,3 +183,15 @@ justify-content: space-between;
  align-items: center;
  flex-direction: column;
 }
+.liked-banner img {
+    transition: transform 0.4s ease;
+  }
+
+  .liked-banner:hover img {
+    transform: scale(1.05);
+  }
+
+  .liked-banner:hover .liked-overlay {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+  }

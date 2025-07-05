@@ -8,7 +8,7 @@ function ImageForm({handleSubmit,setImageForm,handleFileUpdate,fileInputRef,setN
                 <form className='album-form-inner bg-light' onSubmit={handleSubmit}>
                   <div className='form-detail-handler'>
                     <h2 className='text-secondary'>{postForm?"Upload Image":"Edit Image"}</h2>
-                    <button type="button" className='btn' onClick={() => setImageForm(false)}>
+                    <button type="button" className='btn text-dark' onClick={() => setImageForm(false)}>
                       <IoCloseSharp />
                     </button>
                   </div>
