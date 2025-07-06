@@ -112,7 +112,7 @@ setShowForm(false)
   <LikedImagesBanner/>
 <div  className='head-container'>
 
-  <h1 className='mt-3'>My Albums</h1>
+  <h1 className='mt-3 text-secondary'>My Albums</h1>
   <button className="button-create-album" onClick={()=>setShowForm(true)}>+ Create New Album</button>
 </div>
 <br/><br/>
@@ -136,7 +136,7 @@ setShowForm(false)
   </div>
 
   <div className="mt-auto">
-    <h5 className="fw-bold text-white">{album.name}</h5>
+    <h5 className="fw-bold text-secondary">{album.name}</h5>
   </div>
 </div>
 

@@ -11,6 +11,7 @@ import store from './store.js'
 import Home from './pages/Home.jsx'
 import ViewAlbum from './pages/ViewAlbum.jsx'
 import ViewImage from './pages/ViewImage.jsx'
+import LikedImages from './pages/LikedImages.jsx'
 const GoogleOAuthWrapper=()=>(
   <GoogleOAuthProvider clientId='919329357228-pljkg169718fikr5cq0vib012q4jv44e.apps.googleusercontent.com'>
     <Login/>
@@ -36,6 +37,9 @@ element:<Navigate to="/login"/>
   element:<ViewAlbum/>
 },{path:"/album/image/:imageId",
   element:<ViewImage/>
+},{
+  path:"/liked-images",
+  element:<LikedImages/>
 }])
 createRoot(document.getElementById('root')).render(
   <StrictMode>

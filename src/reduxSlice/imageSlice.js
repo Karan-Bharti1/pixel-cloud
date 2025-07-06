@@ -68,7 +68,14 @@ export const findImageData=createAsyncThunk("images/viewImage",async({id})=>{
      console.error(error);
   }
 })
-// Slice
+export const getLikedImages=createAsyncThunk("images/liked",async({ownerId})=>{
+  try {
+    const response=await axios.get(`${baseURL}/liked-images/${ownerId}`)
+    return response.data
+  } catch (error) {
+    console.error(error);
+  }
+})
 export const imageSlice = createSlice({
   name: "images",
   initialState: {
@@ -177,6 +184,19 @@ extraReducers: (builder) => {
         state.status="error"
         state.error=action.payload
       })
+         .addCase(getLikedImages.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+        state.images=[]
+      })
+      .addCase(getLikedImages.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.images = action.payload; // Or use state.likedImages
+      })
+      .addCase(getLikedImages.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to fetch liked images";
+      });
   },
 });
 

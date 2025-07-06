@@ -156,7 +156,7 @@ const handleUserAddition = () => {
       setEmail('');
     });
 };
-console.log(images)
+
 const handleEmailCheckbox = (event) => {
   const { value, checked } = event.target;
 
@@ -226,11 +226,11 @@ console.log(selectedEmails)
                 <button className='add-img-btn' onClick={() => setDeleteAlbumModal(true)}><MdDeleteOutline /></button>
               </div>
             </div>
- <h2 className='mt-4 text-center'>
-                {data.name} <button className='add-img-btn' onClick={() => setEditAlbumForm(true)}><MdEdit /></button>
+ <h2 className='mt-4 text-center text-secondary'>
+                {data.name} <button className='add-img-btn ' onClick={() => setEditAlbumForm(true)}><MdEdit /></button>
               </h2>
             {data.description?.length > 0 && (
-              <h4 className='text-center mt-3'>{data.description}</h4>
+              <h4 className='text-center mt-3 text-secondary'>{data.description}</h4>
             )}
 
             <div className="container mt-4">

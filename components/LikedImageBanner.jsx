@@ -18,7 +18,6 @@ const LikedImagesBanner = () => {
           className="w-100 h-100 object-fit-cover"
         />
 
-        {/* Overlay */}
         <div className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-dark bg-opacity-50 text-white text-center">
          
           <h5 className="m-0 fw-semibold"> <BiSolidLike className="mb-2"  /> View Your Favourite Images</h5>
