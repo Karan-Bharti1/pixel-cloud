@@ -12,6 +12,7 @@ import Home from './pages/Home.jsx'
 import ViewAlbum from './pages/ViewAlbum.jsx'
 import ViewImage from './pages/ViewImage.jsx'
 import LikedImages from './pages/LikedImages.jsx'
+import Bin from './pages/Bin.jsx'
 const GoogleOAuthWrapper=()=>(
   <GoogleOAuthProvider clientId='919329357228-pljkg169718fikr5cq0vib012q4jv44e.apps.googleusercontent.com'>
     <Login/>
@@ -40,6 +41,9 @@ element:<Navigate to="/login"/>
 },{
   path:"/liked-images",
   element:<LikedImages/>
+},{
+  path:"/bin",
+  element:<Bin/>
 }])
 createRoot(document.getElementById('root')).render(
   <StrictMode>

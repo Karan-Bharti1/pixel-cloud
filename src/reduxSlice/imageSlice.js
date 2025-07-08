@@ -91,6 +91,17 @@ export const softDelete = createAsyncThunk(
     }
   }
 );
+export const recycleBinImages = createAsyncThunk(
+  "images/recycleBin",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${baseURL}/recycle/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to fetch recycle bin images");
+    }
+  }
+);
 
 export const imageSlice = createSlice({
   name: "images",
@@ -227,6 +238,19 @@ extraReducers: (builder) => {
         state.status = "failed";
         state.error = action.payload || "Failed to update image";
       })
+      .addCase(recycleBinImages.pending, (state) => {
+  state.status = "loading";
+  state.error = null;
+  state.images=[]
+})
+.addCase(recycleBinImages.fulfilled, (state, action) => {
+  state.status = "succeeded";
+  state.images = action.payload; 
+})
+.addCase(recycleBinImages.rejected, (state, action) => {
+  state.status = "failed";
+  state.error = action.payload || "Failed to fetch recycle bin images";
+})
   },
 });
 

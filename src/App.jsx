@@ -1,4 +1,4 @@
-
+import { IoMdArrowRoundBack } from "react-icons/io";
 import './App.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.bundle.min.js"
@@ -9,7 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchAlbumsData, postAlbumData } from './reduxSlice/albumSlice'
 import { IoCloseSharp } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
-
+import { IoMdHome } from "react-icons/io";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 import { BiSolidPhotoAlbum } from "react-icons/bi";
 import AlbumForm from '../components/AlbumForm'
 import LikedImagesBanner from '../components/LikedImageBanner'
@@ -109,6 +110,14 @@ setShowForm(false)
   </>
 )}
 {state.status!="loading"&& state.albums.length>0 &&(<>
+  <div className='img-btn-placeholder mt-3'>
+             
+          <Link to="/home" className="add-img-btn text-decoration-none">
+           <IoMdArrowRoundBack/>
+          </Link>
+          <Link className="add-img-btn text-decoration-none" to="/bin"><RiDeleteBin6Fill/></Link>
+        </div>
+
   <LikedImagesBanner/>
 <div  className='head-container'>
 
