@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Header from '../../components/Header';
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteImage, recycleBinImages } from '../reduxSlice/imageSlice';
+import { deleteImage, recycleBinImages, softDelete } from '../reduxSlice/imageSlice';
 import { VscDebugRestart } from "react-icons/vsc";
 import Lightbox from 'react-awesome-lightbox';
 import 'react-awesome-lightbox/build/style.css';
@@ -27,6 +27,9 @@ function Bin() {
 const handlePermanentDelete=(id)=>{
     dispatch(deleteImage({id}))
 }
+const handleRestoreImage=(id)=>{
+dispatch(softDelete({id,updatedData:{isDeleted:false}}))
+  }
   return (
     <div className='container mt-3'>
       <Header />
@@ -59,7 +62,8 @@ const handlePermanentDelete=(id)=>{
                    <div className="position-absolute top-0 end-0 m-2">
                                       <button
                                         className="btn btn-secondary btn-sm"
-                                      >
+                               onClick={()=>handleRestoreImage(i._id)}
+                               >
                                         <VscDebugRestart/>
                                       </button>
                                       <button
