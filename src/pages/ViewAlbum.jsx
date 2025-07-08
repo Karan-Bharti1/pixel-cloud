@@ -9,7 +9,7 @@ import ImageForm from '../../components/ImageForm';
 import Select from 'react-select';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteImage, deleteImagesByAlbumId, getImagesAlbum, updateImageData, uploadImage } from '../reduxSlice/imageSlice';
+import { deleteImage, deleteImagesByAlbumId, getImagesAlbum, softDelete, updateImageData, uploadImage } from '../reduxSlice/imageSlice';
 import { deleteAlbumData, getSingleAlbumData, updateAlbumData } from '../reduxSlice/albumSlice';
 import AlbumForm from '../../components/AlbumForm';
 import Lightbox from 'react-awesome-lightbox';
@@ -133,7 +133,7 @@ const [shareForm,setShareForm]=useState(false)
     });
   };
   const handleDeleteImage=(id)=>{
-dispatch(deleteImage({id}))
+dispatch(softDelete({id,updatedData:{isDeleted:true}}))
   }
 const handleImageLike=(id,isFavorite)=>{
 const updatedData={isFavorite:!isFavorite}
@@ -236,7 +236,7 @@ console.log(selectedEmails)
             <div className="container mt-4">
              <div className="container mt-4">
   <div className="row">
-{images &&images.length>0 ? images.map((i, index) => (
+{images &&images.length>0 ? images?.filter(i=>!i.isDeleted).map((i, index) => (
   <div key={i._id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
     <div className="position-relative">
       {/* Image */}

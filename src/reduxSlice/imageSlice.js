@@ -76,6 +76,22 @@ export const getLikedImages=createAsyncThunk("images/liked",async({ownerId})=>{
     console.error(error);
   }
 })
+export const softDelete = createAsyncThunk(
+  "images/softDelete",
+  async ({ id, updatedData }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${baseURL}/image-update/${id}`, updatedData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Soft delete failed");
+    }
+  }
+);
+
 export const imageSlice = createSlice({
   name: "images",
   initialState: {
@@ -196,7 +212,21 @@ extraReducers: (builder) => {
       .addCase(getLikedImages.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || "Failed to fetch liked images";
-      });
+      })
+      .addCase(softDelete.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(softDelete.fulfilled, (state, action) => {
+  state.status = "succeeded";
+  const deletedId = action.payload._id || action.payload.id;
+  state.images = state.images.filter(img => img._id !== deletedId);
+})
+
+      .addCase(softDelete.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || "Failed to update image";
+      })
   },
 });
 
