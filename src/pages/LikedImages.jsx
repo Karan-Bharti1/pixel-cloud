@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import Header from '../../components/Header';
-import { useDispatch, useSelector } from 'react-redux';
-import { getLikedImages, updateImageData } from '../reduxSlice/imageSlice';
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import Header from "../../components/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { getLikedImages, updateImageData } from "../reduxSlice/imageSlice";
 import { BiSolidLike } from "react-icons/bi";
 import { SlLike } from "react-icons/sl";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-// Lightbox
-import Lightbox from 'react-awesome-lightbox';
-import 'react-awesome-lightbox/build/style.css';
+import Lightbox from "react-awesome-lightbox";
+import "react-awesome-lightbox/build/style.css";
 
 function LikedImages() {
   const dispatch = useDispatch();
@@ -18,45 +17,45 @@ function LikedImages() {
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   useEffect(() => {
-    const data = localStorage.getItem('user-info');
+    const data = localStorage.getItem("user-info");
     if (!data) {
       navigate("/login");
       return;
     }
+    const userData=JSON.parse(data)
     const ownerId = JSON.parse(data).id;
-    dispatch(getLikedImages({ ownerId }));
+    dispatch(getLikedImages({ ownerId ,token:userData?.token}));
   }, [dispatch, navigate]);
 
   const handleImageLike = (id, isFavorite) => {
-    const data = localStorage.getItem('user-info');
+    const data = localStorage.getItem("user-info");
     const updatedData = { isFavorite: !isFavorite };
-    const ownerId = JSON.parse(data).id;
-
-    dispatch(updateImageData({ id, updatedData })).then(() => {
-      dispatch(getLikedImages({ ownerId }));
-    });
+    // const ownerId = JSON.parse(data).id;
+const userData=JSON.parse(data)
+    dispatch(updateImageData({ id, updatedData ,token:userData.token}))
   };
 
   return (
-    <div className='container mt-3'>
+    <div className="container mt-3">
       <Header />
 
-      <main className='container mt-4'>
-
-        
-        <div className='d-flex align-items-center justify-content-start mb-3'>
+      <main className="container mt-4">
+        <div className="d-flex align-items-center justify-content-start mb-3">
           <Link to="/dashboard" className="add-img-btn text-decoration-none">
             <IoMdArrowRoundBack />
           </Link>
         </div>
 
-        <h2 className='text-center text-secondary mb-4'>Your Liked Images</h2>
+        <h2 className="text-center text-secondary mb-4">Your Liked Images</h2>
 
         {/* Image Grid */}
         <div className="row">
           {images && images.length > 0 ? (
             images.map((i, index) => (
-              <div key={i._id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+              <div
+                key={i._id}
+                className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
+              >
                 <div className="position-relative">
                   {/* Image */}
                   <img
@@ -65,9 +64,9 @@ function LikedImages() {
                     className="img-fluid rounded shadow-sm w-100"
                     onClick={() => setLightboxIndex(index)}
                     style={{
-                      height: '250px',
-                      objectFit: 'cover',
-                      cursor: 'zoom-in'
+                      height: "250px",
+                      objectFit: "cover",
+                      cursor: "zoom-in",
                     }}
                   />
 
@@ -84,8 +83,12 @@ function LikedImages() {
             ))
           ) : (
             <div className="text-center mt-5">
-              <p className="text-secondary fs-4 fw-semibold">No liked images found.</p>
-              <p className="text-secondary">You can like images from albums to see them here.</p>
+              <p className="text-secondary fs-4 fw-semibold">
+                No liked images found.
+              </p>
+              <p className="text-secondary">
+                You can like images from albums to see them here.
+              </p>
             </div>
           )}
         </div>
@@ -93,15 +96,14 @@ function LikedImages() {
         {/* Lightbox */}
         {lightboxIndex !== null && (
           <Lightbox
-            images={images.map(img => ({
+            images={images.map((img) => ({
               url: img.imageUrl,
-              title: img.name || 'Untitled'
+              title: img.name || "Untitled",
             }))}
             startIndex={lightboxIndex}
             onClose={() => setLightboxIndex(null)}
           />
         )}
-
       </main>
     </div>
   );

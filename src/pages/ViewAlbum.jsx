@@ -21,6 +21,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { baseURL } from '../url';
 function ViewAlbum() {
   const userdata = localStorage.getItem('user-info');
+  const userData=JSON.parse(userdata)
   const id = JSON.parse(userdata).id;
   const { albumId } = useParams();
   const dispatch = useDispatch();
@@ -50,8 +51,10 @@ const [shareForm,setShareForm]=useState(false)
   const data = albums.find(album => album._id === albumId);
 
   useEffect(() => {
-    dispatch(getImagesAlbum(albumId));
-    dispatch(getSingleAlbumData({ albumId }));
+     const userdata = localStorage.getItem('user-info');
+  const userData=JSON.parse(userdata)
+    dispatch(getImagesAlbum({albumId,token:userData.token}));
+    dispatch(getSingleAlbumData({ albumId,token:userData.token }));
   }, [albumId, dispatch]);
 
   useEffect(() => {
@@ -101,7 +104,7 @@ const [shareForm,setShareForm]=useState(false)
     formData.append('tags', JSON.stringify(tags.map(tag => tag.value)));
     formData.append('albumId', albumId);
 
-    dispatch(uploadImage(formData));
+    dispatch(uploadImage({formData,token:userData.token}));
     setTags([]);
     setName('');
     setFileData(null);
@@ -115,8 +118,8 @@ const [shareForm,setShareForm]=useState(false)
   };
 
   const handleAlbumDelete = () => {
-    dispatch(deleteImagesByAlbumId(albumId));
-    dispatch(deleteAlbumData(albumId));
+    dispatch(deleteImagesByAlbumId({albumId,token:userData.token}));
+    dispatch(deleteAlbumData({id:albumId,token:userData.token}));
     navigate("/dashboard");
   };
 
@@ -127,17 +130,17 @@ const [shareForm,setShareForm]=useState(false)
 
   const handleAlbumFormSubmit = (event) => {
     event.preventDefault();
-    dispatch(updateAlbumData({ id: albumId, albumData })).then(() => {
-      dispatch(getSingleAlbumData({ albumId }));
+    dispatch(updateAlbumData({ id: albumId,token:userData?.token, albumData })).then(() => {
+      dispatch(getSingleAlbumData({ albumId,token:userData?.token }));
       setEditAlbumForm(false);
     });
   };
   const handleDeleteImage=(id)=>{
-dispatch(softDelete({id,updatedData:{isDeleted:true}}))
+dispatch(softDelete({id,updatedData:{isDeleted:true},token:userData.token}))
   }
 const handleImageLike=(id,isFavorite)=>{
 const updatedData={isFavorite:!isFavorite}
-dispatch(updateImageData({id,updatedData}))
+dispatch(updateImageData({id,updatedData,token:userData.token}))
 }
  const albumUsers=albums?.find(album=>album._id===albumId)?.sharedUsers
 const handleUserAddition = () => {
@@ -149,10 +152,10 @@ const handleUserAddition = () => {
 
   const updatedData = { sharedUsers: [...existingUsers, email] };
 
-  dispatch(updateAlbumData({ id: albumId, albumData: updatedData }))
+  dispatch(updateAlbumData({ id: albumId,token:userData.token, albumData: updatedData }))
     .then(() => {
       
-      dispatch(getSingleAlbumData({ albumId }));
+      dispatch(getSingleAlbumData({ albumId,token:userData.token, }));
       setEmail('');
     });
 };
@@ -176,12 +179,12 @@ const handleShareAlbum = async () => {
     images: images.map(img => img.imageUrl),
     users: selectedEmails,
   };
-console.log(selectedEmails)
   try {
     const response = await fetch(`${baseURL}/albums/${albumId}/share`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization":`Bearer ${userData.token}`
       },
       body: JSON.stringify(data)
     });

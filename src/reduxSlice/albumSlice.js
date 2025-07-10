@@ -13,9 +13,11 @@ export const getHeaders = (token) => {
   };
   export const getSingleAlbumData = createAsyncThunk(
   "album/getSingle",
-  async ({ albumId}) => {
+  async ({ albumId,token}) => {
     try {
-      const response = await axios.get(`${baseURL}/albums/album/${albumId}`);
+      const response = await axios.get(`${baseURL}/albums/album/${albumId}`,{
+        headers:getHeaders(token)
+    });
       return response.data;
     } catch (err) {
       return console.log(err)
@@ -32,21 +34,20 @@ export const fetchAlbumsData=createAsyncThunk("fetchAlbums",async({id,token})=>{
 })
 export const postAlbumData=createAsyncThunk( "postAlbums",async({data,token})=>{
     const response=await axios.post(`${baseURL}/album`,data,{
-        headers:{
-             headers:getHeaders(token)
-        }
-        
+        headers:getHeaders(token)
     })
     return response.data
 })
-export const deleteAlbumData=createAsyncThunk("deleteAlbums",async(id)=>{
-    const response=await axios.delete(`${baseURL}/album/${id}`)
+export const deleteAlbumData=createAsyncThunk("deleteAlbums",async({id,token})=>{
+    const response=await axios.delete(`${baseURL}/album/${id}`,{
+      headers:getHeaders(token)
+    })
     return response.data
 })
-export const updateAlbumData=createAsyncThunk("updateAlbum",async({id,albumData})=>{
+export const updateAlbumData=createAsyncThunk("updateAlbum",async({id,albumData,token})=>{
     
     const response=await axios.post(`${baseURL}/album/${id}/update`,albumData,{
-     headers:{'Content-Type': 'application/json'}
+     headers:getHeaders(token)
     })
     return response.data
 })
