@@ -17,7 +17,7 @@ function PublicViewImage() {
   const { images, status, error } = useSelector(state => state.images);
   const { comments } = useSelector(state => state.comments);
 
-  const image = images.find(img => img._id === imageId);
+  const image = images.find(img => img?._id === imageId);
 
   const [viewDetails, setViewDetails] = useState(false);
   const [viewComments, setViewComments] = useState(false);
