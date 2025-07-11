@@ -23,7 +23,7 @@ import { baseURL } from '../url';
 import ShimmerUIAlbum from '../../components/ShimmerUI1';
 
 import Lightbox from 'yet-another-react-lightbox';
-import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+
 import 'yet-another-react-lightbox/styles.css';
 
 function ViewAlbum() {

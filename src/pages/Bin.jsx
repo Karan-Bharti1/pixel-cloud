@@ -12,7 +12,7 @@ import { VscDebugRestart } from "react-icons/vsc";
 import { MdDelete } from "react-icons/md";
 
 import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
+
 import "yet-another-react-lightbox/styles.css";
 
 function Bin() {

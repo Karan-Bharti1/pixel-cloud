@@ -27,6 +27,7 @@ function Login() {
     onSuccess: googleResponse,
     onError: () => googleResponse,
     flow: "auth-code",
+    redirect_uri:"https://pixel-cloud-three.vercel.app"
   });
   return (
     <main className="gallery-background">

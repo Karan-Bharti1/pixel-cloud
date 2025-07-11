@@ -8,9 +8,8 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { FaRegCommentDots } from "react-icons/fa";
 import { CgDetailsMore } from "react-icons/cg";
 
-// ✅ Lightbox import
 import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
+
 import "yet-another-react-lightbox/styles.css";
 
 function PublicViewImage() {
@@ -101,7 +100,6 @@ function PublicViewImage() {
               onClick={() => setLightboxOpen(true)}
             />
 
-            {/* ✅ Lightbox */}
             {lightboxOpen && (
               <Lightbox
                 open={lightboxOpen}
@@ -113,7 +111,7 @@ function PublicViewImage() {
                     height: 800,
                   },
                 ]}
-                plugins={[Zoom]}
+               
               />
             )}
 

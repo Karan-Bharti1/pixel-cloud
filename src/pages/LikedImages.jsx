@@ -8,7 +8,7 @@ import { SlLike } from "react-icons/sl";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
 import Lightbox from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
+
 import "yet-another-react-lightbox/styles.css";
 
 function LikedImages() {

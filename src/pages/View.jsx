@@ -5,7 +5,6 @@ import { getImagesAlbum } from '../reduxSlice/imageSlice';
 import { getSingleAlbumData } from '../reduxSlice/albumSlice';
 import ShimmerUIAlbum from '../../components/ShimmerUI1';
 import Lightbox from 'yet-another-react-lightbox';
-
 import 'yet-another-react-lightbox/styles.css';
 import { RiInformation2Fill } from "react-icons/ri";
 import Header from '../../components/Header';
