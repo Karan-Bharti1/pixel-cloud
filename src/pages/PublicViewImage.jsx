@@ -1,48 +1,57 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../components/Header";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { findImageData } from "../reduxSlice/imageSlice";
 import { getCommentsData, postCommentData } from "../reduxSlice/commentSlice";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FaRegCommentDots } from "react-icons/fa";
 import { CgDetailsMore } from "react-icons/cg";
-import { Link } from "react-router-dom";
+
+// ✅ Lightbox import
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import "yet-another-react-lightbox/styles.css";
 
 function PublicViewImage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { imageId } = useParams();
 
-  const { images, status, error } = useSelector(state => state.images);
-  const { comments } = useSelector(state => state.comments);
+  const { images, status, error } = useSelector((state) => state.images);
+  const { comments } = useSelector((state) => state.comments);
 
-  const image = images.find(img => img?._id === imageId);
+  const image = images?.find((img) => img?._id === imageId);
 
   const [viewDetails, setViewDetails] = useState(false);
   const [viewComments, setViewComments] = useState(false);
-  const [comment, setComment] = useState({ imageId: imageId, text: "", userName: "" });
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [comment, setComment] = useState({
+    imageId: imageId,
+    text: "",
+    userName: "",
+  });
 
   useEffect(() => {
     const userdata = localStorage.getItem("user-info");
     if (!userdata) return navigate("/login");
 
     const userData = JSON.parse(userdata);
-    setComment(prev => ({ ...prev, userName: userData.name }));
+    setComment((prev) => ({ ...prev, userName: userData?.name }));
 
-    dispatch(findImageData({ id: imageId, token: userData.token }));
-    dispatch(getCommentsData({ id: imageId, token: userData.token }));
+    dispatch(findImageData({ id: imageId, token: userData?.token }));
+    dispatch(getCommentsData({ id: imageId, token: userData?.token }));
   }, [dispatch, imageId, navigate]);
 
   const handleCommentChange = (e) => {
-    setComment(prev => ({ ...prev, text: e.target.value }));
+    setComment((prev) => ({ ...prev, text: e.target.value }));
   };
 
   const handleCommentSubmit = () => {
     const userdata = JSON.parse(localStorage.getItem("user-info"));
-    dispatch(postCommentData({ data: comment, token: userdata.token }));
+    dispatch(postCommentData({ data: comment, token: userdata?.token }));
     setTimeout(() => {
-      setComment(prev => ({ ...prev, text: "" }));
+      setComment((prev) => ({ ...prev, text: "" }));
     }, 1000);
   };
 
@@ -60,7 +69,7 @@ function PublicViewImage() {
     <div className="container mt-3">
       <Header />
       <main>
-        {images.length > 0 && (
+        {images?.length > 0 && (
           <>
             <div className="btn-align-img">
               <div>
@@ -69,16 +78,45 @@ function PublicViewImage() {
                 </Link>
               </div>
               <div>
-                <button className="add-img-btn" onClick={() => setViewComments(!viewComments)}>
+                <button
+                  className="add-img-btn"
+                  onClick={() => setViewComments(!viewComments)}
+                >
                   <FaRegCommentDots />
                 </button>
-                <button className="add-img-btn" onClick={() => setViewDetails(!viewDetails)}>
+                <button
+                  className="add-img-btn"
+                  onClick={() => setViewDetails(!viewDetails)}
+                >
                   <CgDetailsMore />
                 </button>
               </div>
             </div>
 
-            <img src={image?.imageUrl} className="viewImage" alt="Image" />
+            <img
+              src={image?.imageUrl}
+              className="viewImage"
+              alt="Image"
+              style={{ cursor: "zoom-in" }}
+              onClick={() => setLightboxOpen(true)}
+            />
+
+            {/* ✅ Lightbox */}
+            {lightboxOpen && (
+              <Lightbox
+                open={lightboxOpen}
+                close={() => setLightboxOpen(false)}
+                slides={[
+                  {
+                    src: image?.imageUrl,
+                    width: 1200,
+                    height: 800,
+                  },
+                ]}
+                plugins={[Zoom]}
+              />
+            )}
+
             <br />
             <br />
 
@@ -88,19 +126,19 @@ function PublicViewImage() {
                 <ul className="list-unstyled">
                   <li className="text-secondary">Name: {image?.name}</li>
                   <li className="text-secondary">
-                    Size: {(image?.size / 1024).toFixed(2)} KB
+                    Size: {(image?.size / 1024)?.toFixed(2)} KB
                   </li>
                   <li className="text-secondary">
                     Liked: {image?.isFavorite ? "Yes" : "No"}
                   </li>
                   <li className="text-secondary">
-                    Tags: {image?.tags?.length ? image.tags.join(", ") : "None"}
+                    Tags: {image?.tags?.length ? image?.tags?.join(", ") : "None"}
                   </li>
                   <li className="text-secondary">
-                    Uploaded: {new Date(image?.uploadedAt).toLocaleString()}
+                    Uploaded: {new Date(image?.uploadedAt)?.toLocaleString()}
                   </li>
                   <li className="text-secondary">
-                    Updated: {new Date(image?.updatedAt).toLocaleString()}
+                    Updated: {new Date(image?.updatedAt)?.toLocaleString()}
                   </li>
                 </ul>
               </div>
@@ -115,7 +153,7 @@ function PublicViewImage() {
                     className="form-control bg-dark text-white border-0 rounded-3 p-3"
                     placeholder="Write your thoughts..."
                     rows="4"
-                    value={comment.text}
+                    value={comment?.text}
                   ></textarea>
                   <div className="text-end mt-2">
                     <button
@@ -133,7 +171,7 @@ function PublicViewImage() {
                   <h5 className="text-light fw-semibold mb-3">Comments</h5>
                   {comments?.length > 0 ? (
                     <div className="d-flex flex-column gap-3">
-                      {comments.map((comment, index) => (
+                      {comments?.map((comment, index) => (
                         <div
                           key={index}
                           className="bg-dark text-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-start"
@@ -146,7 +184,8 @@ function PublicViewImage() {
                               Posted by: <strong>{comment?.userName}</strong>
                             </small>
                             <small className="text-secondary">
-                              at: {new Date(comment?.updatedAt).toLocaleString()}
+                              at:{" "}
+                              {new Date(comment?.updatedAt)?.toLocaleString()}
                             </small>
                           </div>
                         </div>
