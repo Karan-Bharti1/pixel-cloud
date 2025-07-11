@@ -17,9 +17,17 @@ import ViewAlbum from "./pages/ViewAlbum.jsx";
 import ViewImage from "./pages/ViewImage.jsx";
 import LikedImages from "./pages/LikedImages.jsx";
 import Bin from "./pages/Bin.jsx";
+import View from "./pages/View.jsx";
+import ViewLogin from "./pages/ViewLogin.jsx";
+import PublicViewImage from "./pages/PublicViewImage.jsx";
 const GoogleOAuthWrapper = () => (
   <GoogleOAuthProvider clientId="919329357228-pljkg169718fikr5cq0vib012q4jv44e.apps.googleusercontent.com">
     <Login />
+  </GoogleOAuthProvider>
+);
+const GoogleOAuthWrapperView = () => (
+  <GoogleOAuthProvider clientId="919329357228-pljkg169718fikr5cq0vib012q4jv44e.apps.googleusercontent.com">
+    <ViewLogin />
   </GoogleOAuthProvider>
 );
 const router = createBrowserRouter([
@@ -55,7 +63,16 @@ const router = createBrowserRouter([
   {
     path: "/bin",
     element: <Bin />,
-  },
+  },{
+    path:"/view/:albumId",
+    element:<View/>
+  },{
+    path:"/view-login/:albumId",
+    element:<GoogleOAuthWrapperView/>
+  },{
+    path:"/view/image/:imageId",
+    element:<PublicViewImage/>
+  }
 ]);
 createRoot(document.getElementById("root")).render(
   <StrictMode>

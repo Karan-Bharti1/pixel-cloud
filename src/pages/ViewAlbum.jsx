@@ -6,8 +6,6 @@ import { FaShareNodes } from "react-icons/fa6";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { IoCloseSharp } from "react-icons/io5";
 import ImageForm from '../../components/ImageForm';
-import Select from 'react-select';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteImage, deleteImagesByAlbumId, getImagesAlbum, softDelete, updateImageData, uploadImage } from '../reduxSlice/imageSlice';
 import { deleteAlbumData, getSingleAlbumData, updateAlbumData } from '../reduxSlice/albumSlice';
@@ -51,7 +49,13 @@ const [shareForm,setShareForm]=useState(false)
   const { status, images, error } = useSelector(state => state.images);
   const { albums, status: albumStatus } = useSelector(state => state.albums);
   const data = albums.find(album => album._id === albumId);
+ useEffect(() => {
+    const data = localStorage.getItem("user-info");
 
+    if (!data) {
+      navigate("/login");
+    }
+  }, [navigate]);
   useEffect(() => {
      const userdata = localStorage.getItem('user-info');
   const userData=JSON.parse(userdata)

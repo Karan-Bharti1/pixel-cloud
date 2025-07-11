@@ -25,6 +25,7 @@ function ViewImage() {
   const { imageId } = useParams();
     const userdata= localStorage.getItem("user-info");
     const userData=JSON.parse(userdata)
+    console.log(userData)
   const tagOptions = [
     { value: "nature", label: "Nature" },
     { value: "sunset", label: "Sunset" },
@@ -34,7 +35,7 @@ function ViewImage() {
     { value: "beach", label: "Beach" },
     { value: "office", label: "Office" },
   ];
-  const [comment, setComment] = useState({ imageId: imageId, text: "" });
+  const [comment, setComment] = useState({ imageId: imageId, text: "" ,userName:userData.name});
   const navigate = useNavigate();
   useEffect(() => {
     const data = localStorage.getItem("user-info");
@@ -53,6 +54,7 @@ function ViewImage() {
 
   const {  status, error } = useSelector((state) => state.images);
   const image = state.images.find((img) => img?._id === imageId);
+
   useEffect(() => {
     setName(image?.name);
 
@@ -63,10 +65,12 @@ function ViewImage() {
       setTags(formattedTags);
     }
   }, [image]);
+  console.log(image)
   const handleCommentChange = (event) => {
     setComment({ ...comment, text: event.target.value });
   };
   const handleCommentSubmit = () => {
+    console.log(comment)
     dispatch(postCommentData({ data: comment,token:userData.token }));
     setTimeout(() => {
       setComment({ ...comment, text: "" });
@@ -184,18 +188,28 @@ if (status === "failed" || status==="error") {
                   <h5 className="text-light fw-semibold mb-3">Comments</h5>
                   {commentState.comments?.length > 0 ? (
                     <div className="d-flex flex-column gap-3">
-                      {commentState.comments.map((comment, index) => (
-                        <div
-                          key={index}
-                          className="bg-dark text-white p-3 rounded-3 shadow-sm"
-                        >
-                          <p className="mb-1">{comment?.text}</p>
-                          <small className="text-secondary">
-                            Posted at:{" "}
-                            {new Date(comment?.updatedAt).toLocaleString()}
-                          </small>
-                        </div>
-                      ))}
+                     {commentState.comments.map((comment, index) => (
+  <div
+    key={index}
+    className="bg-dark text-white p-3 rounded-3 shadow-sm d-flex justify-content-between align-items-start"
+  >
+    <div>
+    <p className="mb-1">{comment?.text}</p>
+   
+
+    </div>
+    <div>
+    <small className="text-secondary d-block">
+      Posted by: <strong>{comment?.userName}</strong>
+    </small>
+ 
+    <small className="text-secondary">
+      at: {new Date(comment?.updatedAt).toLocaleString()}
+    </small>
+    </div>
+  </div>
+))}
+
                     </div>
                   ) : (
                     <p className="text-secondary text-center fs-4 fw-bolder">
