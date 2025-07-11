@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { baseURL } from '../url'
 
 const api=axios.create({
-    baseURL:"http://localhost:5000/auth"
+    baseURL:`${baseURL}/auth`
 })
 export const googleAuth=(code)=>api.get(`/google?code=${code}`)
