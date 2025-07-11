@@ -102,7 +102,7 @@ function LikedImages() {
     height: 800,
   }))}
   index={lightboxIndex}
-  plugins={[Zoom]}
+
 />
 
         )}

@@ -5,7 +5,7 @@ import { getImagesAlbum } from '../reduxSlice/imageSlice';
 import { getSingleAlbumData } from '../reduxSlice/albumSlice';
 import ShimmerUIAlbum from '../../components/ShimmerUI1';
 import Lightbox from 'yet-another-react-lightbox';
-import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+
 import 'yet-another-react-lightbox/styles.css';
 import { RiInformation2Fill } from "react-icons/ri";
 import Header from '../../components/Header';
@@ -75,20 +75,19 @@ function View() {
             )}
           </div>
 
-          {lightboxIndex !== null && visibleImages?.length > 0 && (
-            <Lightbox
-              open={true}
-              close={() => setLightboxIndex(null)}
-              index={lightboxIndex}
-              slides={visibleImages?.map((img) => ({
-                src: img?.imageUrl,
-                width: 1200,
-                height: 800,
-                alt: img?.name,
-              }))}
-              plugins={[Zoom]}
-            />
-          )}
+         {lightboxIndex !== null && (
+  <Lightbox
+    open={true}
+    close={() => setLightboxIndex(null)}
+    index={lightboxIndex}
+    slides={images?.filter(i => !i?.isDeleted)?.map(img => ({
+      src: img?.imageUrl,
+      title: img?.name,
+    }))}
+   
+  />
+)}
+
         </>
       )}
     </div>

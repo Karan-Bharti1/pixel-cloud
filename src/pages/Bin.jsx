@@ -126,7 +126,7 @@ function Bin() {
               src: img.imageUrl,
             }))}
             index={lightboxIndex}
-            plugins={[Zoom]}
+           
           />
         )}
       </main>
