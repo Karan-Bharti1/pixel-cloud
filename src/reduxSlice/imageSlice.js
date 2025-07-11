@@ -167,6 +167,7 @@ export const imageSlice = createSlice({
       .addCase(getImagesAlbum.pending, (state) => {
         state.status = "loading";
         state.error = null;
+          state.images = [];
       })
       .addCase(getImagesAlbum.fulfilled, (state, action) => {
         state.status = "succeeded";

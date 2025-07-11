@@ -118,6 +118,12 @@ function App() {
               </div>
             </>
           )}
+          {state.status === "failed"||state.status==="error" && (
+  <div className="alert alert-danger text-center mt-5">
+    <h5 className="text-secondary">An Error Occured While  loading albums</h5>
+ 
+  </div>
+)}
           {state.status != "loading" && state.albums.length > 0 && (
             <>
               <div className="img-btn-placeholder mt-3">

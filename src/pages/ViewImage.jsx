@@ -51,6 +51,7 @@ function ViewImage() {
     dispatch(getCommentsData({ id: imageId ,token:userData.token}));
   }, [dispatch, imageId]);
 
+  const {  status, error } = useSelector((state) => state.images);
   const image = state.images.find((img) => img?._id === imageId);
   useEffect(() => {
     setName(image?.name);
@@ -86,7 +87,15 @@ function ViewImage() {
       setImageForm(false);
     }, 1000);
   };
-
+if (status === "failed" || status==="error") {
+    return (
+      <div className="container mt-5 text-center text-light">
+        <Header />
+        <h4 className="text-danger fw-bold">Error loading image</h4>
+        <p className="text-muted">{error || "Please try again later."}</p>
+      </div>
+    );
+  }
   return (
     <div className="container mt-3">
       <Header />

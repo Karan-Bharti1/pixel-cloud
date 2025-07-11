@@ -195,3 +195,9 @@ justify-content: space-between;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(12px);
   }
+  .shimmer-box {
+  height: 250px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
