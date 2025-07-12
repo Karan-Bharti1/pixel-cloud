@@ -124,7 +124,7 @@ function App() {
  
   </div>
 )}
-          {state.status != "loading" && state.albums.length > 0 && (
+          {state.status != "loading" && state.albums?.length > 0 && (
             <>
               <div className="img-btn-placeholder mt-3">
                 <Link to="/home" className="add-img-btn text-decoration-none">
@@ -148,11 +148,11 @@ function App() {
               <br />
               <br />
               <div className="row">
-                {state.albums.map((album) => (
-                  <div key={album._id} className="col-md-3 col-sm-6 mb-4">
+                {state.albums?.map((album) => (
+                  <div key={album?._id} className="col-md-3 col-sm-6 mb-4">
                     <Link
                       className="text-decoration-none"
-                      to={`/album/${album._id}`}
+                      to={`/album/${album?._id}`}
                     >
                       <div
                         className="card album-card shadow-lg rounded-4 p-4 text-white"
@@ -173,7 +173,7 @@ function App() {
 
                         <div className="mt-auto">
                           <h5 className="fw-bold text-secondary">
-                            {album.name}
+                            {album?.name}
                           </h5>
                         </div>
                       </div>

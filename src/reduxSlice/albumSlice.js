@@ -62,7 +62,7 @@ reducers:{},
 extraReducers:(builder)=>{
     builder.addCase(fetchAlbumsData.pending,state=>{
         state.status="loading"
-        
+        state.albums=[]
     })
     builder.addCase(fetchAlbumsData.fulfilled,(state,action)=>{
         state.status="succeeded"
