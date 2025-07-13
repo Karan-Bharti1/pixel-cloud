@@ -54,19 +54,42 @@ function App() {
       <div className="container mt-3">
         <Header />
         <main className="container">
-          {state.status === "loading" && (
-            <div className="text-center">
-              <div className="spinner-grow text-light" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-              <div className="spinner-grow text-light" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-              <div className="spinner-grow text-light" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </div>
-            </div>
-          )}
+         {state.status === "loading" && (
+  <div className="row">
+    {[1, 2, 3, 4].map((_, index) => (
+      <div className="col-md-3 col-sm-6 mb-4" key={index}>
+        <div
+          className="card shadow-lg rounded-4 p-4"
+          style={{
+            height: "200px",
+            background: "#1e1e1e",
+            border: "none",
+          }}
+        >
+          <div className="d-flex justify-content-end mb-4">
+            <div
+              className="placeholder-glow rounded-circle"
+              style={{
+                height: "32px",
+                width: "32px",
+                backgroundColor: "#2c2c2c",
+              }}
+            ></div>
+          </div>
+          <div className="mt-auto">
+            <p className="placeholder-glow">
+              <span
+                className="placeholder col-7 bg-secondary"
+                style={{ height: "20px", display: "block", borderRadius: "5px" }}
+              ></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
           {state.status != "loading" && state.albums.length === 0 && (
             <>
               <div className="container text-light my-5">
