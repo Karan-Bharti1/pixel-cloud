@@ -10,10 +10,9 @@
 - 🗑️ Soft-delete & restore images (Recycle Bin)
 - 📤 Share albums via email with secure viewer access
 
+
 🌐 [Live App](https://pixel-cloud-three.vercel.app/login)  
-
 🔗 [Backend Repo](https://github.com/Karan-Bharti1/pixel-cloud-backend)
-
 📽️ [Video Demo](https://drive.google.com/file/d/1jHMs8GknZ-J80saN_85ML-Lkmlfp476O/view?usp=sharing)
 ---
 
